@@ -163,7 +163,7 @@
       markerInfo: "Board marker: megjelöli a tábla SVG-t (ad-board-svg). Ha a custom tábla skin ezt használja, maradjon ON.",
       bmInfo: "A /boards oldalon betesz egy 'Vissza az Autodartsba' gombot (touch/fullscreenben hasznos).",
       bmBackLabel: "Vissza az Autodartsba",
-      skinInfo: "Ha Stylebotot használsz ehhez az oldalhoz, kapcsold ki (vagy ne legyen aktív), mert összeakadhat ezzel a szkripttel.",
+      skinInfo: "Skin/Layout: Ha Stylebotot is használsz az Autodarts oldalon, kapcsold ki (vagy tiltsd le az Autodartsra), mert összeakadhat ezzel a szkripttel és furcsa kinézetet / duplázott stílust okozhat. Autodarts frissítésnél a css-xxxxx classok változhatnak, ilyenkor frissíteni kell a szelektorokat.",
       tab: {
         general:  "Általános",
         skin:     "Skin / Layout",
@@ -279,7 +279,7 @@
       markerInfo: "Board marker: marks the board SVG (ad-board-svg). Keep ON if your custom board skin relies on it.",
       bmInfo: "Adds a 'Back to Autodarts' button on /boards (useful in touchscreen/fullscreen).",
       bmBackLabel: "Back to Autodarts",
-      skinInfo: "If you use Stylebot on this page, disable it (or make sure it’s not active), because it can conflict with this script.",
+      skinInfo: "Skin/Layout: If you also use Stylebot on Autodarts, disable it for this site to avoid conflicts (double styling / broken layout). If Autodarts updates and css-xxxxx classnames change, selectors may need an update.",
       tab: {
         general:  "General",
         skin:     "Skin / Layout",
@@ -395,7 +395,7 @@
       markerInfo: "Board Marker: markiert das Board-SVG (ad-board-svg). Anlassen, wenn dein Board-Skin darauf basiert.",
       bmInfo: "Fügt auf /boards einen 'Zurück zu Autodarts' Button hinzu (für Touch/Fullscreen hilfreich).",
       bmBackLabel: "Zurück zu Autodarts",
-      skinInfo: "Wenn du Stylebot auf dieser Seite nutzt, deaktiviere es (oder stelle sicher, dass es nicht aktiv ist), sonst kann es mit diesem Script kollidieren.",
+      skinInfo: "Skin/Layout: Wenn du zusätzlich Stylebot für Autodarts nutzt, deaktiviere es für diese Seite, sonst kann es zu Konflikten kommen (doppeltes Styling / kaputtes Layout). Wenn Autodarts updatet und css-xxxxx Klassen sich ändern, müssen die Selektoren ggf. angepasst werden.",
       tab: {
         general:  "Allgemein",
         skin:     "Skin / Layout",
