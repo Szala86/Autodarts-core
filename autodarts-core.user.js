@@ -3,6 +3,8 @@
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
 // @version      2.4.5
+// @downloadURL  https://raw.githubusercontent.com/Szala86/Autodarts-core/refs/heads/main/autodarts-core.user.js
+// @updateURL    https://raw.githubusercontent.com/Szala86/Autodarts-core/refs/heads/main/autodarts-core.user.js
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
