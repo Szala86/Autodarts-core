@@ -15,16 +15,19 @@ All-in-one userscript for https://play.autodarts.io:
 - Optional integrated Skin/Layout module (replaces Stylebot CSS)
 
 ## Install (Violentmonkey / Tampermonkey)
-1. Open this link:
-   **Install:** https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
-2. Your userscript manager will show an install page → click **Install**.
+
+Open this URL (RAW userscript):
+https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
+
+Your userscript manager will show an install page → click **Install**.
 
 ## Updates
-The script has `@updateURL` and `@downloadURL`, so Violentmonkey can update automatically.
-- Violentmonkey: Dashboard → script → **Check for updates**
+The script includes `@updateURL` and `@downloadURL`, so Violentmonkey can update automatically.
+- Violentmonkey: Dashboard → this script → **Check for updates**
 
-## Important note about Stylebot
-If you use **Stylebot**, disable it for Autodarts while this script is active, because the CSS can conflict and cause double-styling.
+## Stylebot note (important)
+If you also use **Stylebot** on Autodarts, **disable it for this site** (or turn off your Autodarts Stylebot rules),
+because it can conflict with this script (double styling / broken layout).
 
 ## Hotkeys
 - Shift+F — open/close panel
@@ -39,7 +42,6 @@ If you use **Stylebot**, disable it for Autodarts while this script is active, b
 Put screenshots into: `docs/screenshots/`
 
 ## Issues / Feature requests
-Open an issue here:
 https://github.com/Szala86/Autodarts-core/issues
 
 ## License
