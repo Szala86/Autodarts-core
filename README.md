@@ -1,45 +1,44 @@
-<!-- README.md (English) -->
-
 # Autodarts CORE (Userscript)
 
 A modular userscript for **play.autodarts.io** that adds a configurable **CORE panel** with presets and UI enhancements.
 
-It includes:
-- Presets A/B/C
-- HU / EN / DE UI
-- Safe Mode
-- Toggleable Skin/Layout (integrated CSS)
-- Throw value → points conversion (T20 → 60, D2 → 4, etc.)
-- Total overlay fix
+## Features
+- Presets **A/B/C**
+- **HU / EN / DE** UI
+- **Safe Mode**
+- Toggleable **Skin / Layout** (integrated CSS)
+- Throw value → points conversion (**T20 → 60**, **D2 → 4**, etc.)
+- **Total overlay** fix
 - Checkout tip highlighting
 - Active player highlight
 - Triple-hit animation
 - Optional win music
 - Floating clock widget
 - Board marker utility
-- Optional “Back to Autodarts” button on `/boards`
+- Optional **“Back to Autodarts”** button on `/boards`
 
 ---
 
 ## Preview
 
 ### GIFs
-![Panel + Clock](docs/anim_panel_and_clock.gif)
-![Triple hit](docs/anim_triple_hit.gif)
+<img src="docs/media/anim_panel_and_clock.gif" width="520" alt="Panel + Clock" />
+<br/>
+<img src="docs/media/anim_triple_hit.gif" width="520" alt="Triple hit animation" />
 
 ### Screenshots
-![General](docs/ui_panel_general.png)
-![Skin / Layout](docs/ui_skin_layout.png)
-![Throw points](docs/ui_throw_points.png)
-![Total overlay](docs/ui_total_overlay.png)
-![Checkout tip](docs/ui_checkout_tip.png)
-![Clock widget](docs/ui_clock_widget.png)
+<img src="docs/media/ui_panel_general.png" width="320" alt="General tab" />
+<img src="docs/media/ui_skin_layout.png" width="320" alt="Skin / Layout tab" />
+<img src="docs/media/ui_throw_points.png" width="320" alt="Throw points" />
+<img src="docs/media/ui_total_overlay.png" width="320" alt="Total overlay" />
+<img src="docs/media/ui_checkout_tip.png" width="320" alt="Checkout tip" />
+<img src="docs/media/ui_clock_widget.png" width="320" alt="Clock widget" />
 
 ---
 
 ## Supported pages
-- `https://play.autodarts.io/matches/...` (match UI)
-- `https://play.autodarts.io/boards` (optional back button)
+- Match UI: `https://play.autodarts.io/matches/...`
+- Boards page (optional back button): `https://play.autodarts.io/boards`
 
 ---
 
@@ -57,63 +56,46 @@ It includes:
 ## Installation
 
 ### Violentmonkey (Firefox)
-1. Install **Violentmonkey** add-on
+1. Install **Violentmonkey**
 2. Open the RAW script URL:
-   ```txt
-   https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
+   `https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js`
+3. Click **Install**
 
-Click Install
+### Tampermonkey (Chrome)
+1. Install **Tampermonkey**
+2. Open the RAW script URL:
+   `https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js`
+3. Click **Install**
 
-Tampermonkey (Chrome)
+---
 
-Same steps:
+## Updating
+Use your userscript manager:
+- “Check for updates” (or automatic updates if enabled)
 
-Install Tampermonkey
+---
 
-Open the RAW script URL:
+## Usage notes
+- Presets A/B/C store separate settings.
+- Safe Mode limits extreme values to keep the UI stable.
+- If you use **Stylebot** on play.autodarts.io, disable it to avoid conflicts with the integrated Skin/Layout module.
 
-https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
+---
 
-Click Install
-
-Updating
-
-The userscript updates via your manager (Violentmonkey/Tampermonkey):
-
-“Check for updates” (or automatic update if enabled)
-
-Usage notes
-
-Presets A/B/C store separate settings (so you can keep different looks or setups).
-
-Safe Mode limits extreme values to avoid breaking the UI layout.
-
-Skin / Layout integrates a CSS layout skin.
-If you also use Stylebot, disable it for play.autodarts.io to avoid conflicts.
-
-Credits / Attribution
-
+## Credits / Attribution
 This project integrates / is inspired by:
+- **Back-to-AD-Button** feature: based on **MartinHH**’s script
+- **Animate Triple Autodarts** / triple-hit animation concept: based on **amazingjin**’s script
 
-Back-to-AD-Button feature: based on MartinHH’s script
+---
 
-Animate Triple Autodarts / triple-hit animation idea: based on amazingjin’s script
-
-(Names credited as requested. If you want, you can add direct source links here.)
-
-Troubleshooting
-
-If Autodarts updates and some selectors change, the Skin module may need an update.
-
+## Troubleshooting
+Autodarts updates may change Chakra hashed classes (`.css-xxxxx`).
 Prefer stable selectors like:
+- `#ad-ext-turn`
+- `#ad-ext-player-display`
+- custom classes you control
 
-#ad-ext-turn
+---
 
-#ad-ext-player-display
-
-your own custom classes
-over Chakra hashed classes (.css-xxxxx).
-
-License
-
-See LICENSE (if present) or add your preferred license file.
+## License
