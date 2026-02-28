@@ -20,7 +20,20 @@
   const SCRIPT_VERSION = "2.4.7";
 
   /* ================== STORAGE ================== */
-  const STORE_KEY_STATE = "ad_core_state_v245";
+  const STORE_KEY_STATE = "ad_core_state";
+  const LEGACY_KEYS = [
+  "ad_core_state_v245",
+  "ad_core_state_v243",
+  "ad_core_state_v242",
+  "ad_core_state_v241",
+  "ad_core_state_v240",
+  "ad_core_state_v233",
+  "ad_core_state_v232",
+  "ad_core_state_v231",
+  "ad_core_state_v230",
+  "ad_core_state_v227",
+];
+  const STATE_SCHEMA_VERSION = 1;
   const LEGACY_KEYS = [
     "ad_core_state_v243",
     "ad_core_state_v242",
