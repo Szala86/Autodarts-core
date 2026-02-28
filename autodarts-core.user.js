@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Autodarts – CORE (All-in-One + Clock + BoardManager Back + Skin Toggle) v2.4.5
+// @name         Autodarts – CORE (All-in-One + Clock + BoardManager Back + Skin Toggle) v2.4.6
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
 // @version      2.4.6
