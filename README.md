@@ -4,6 +4,8 @@
 
 A modular userscript for **play.autodarts.io** that adds a configurable **CORE panel** with presets and UI enhancements.
 
+> ⚠️ Disclaimer: This project is community-made and **not** affiliated with Autodarts.
+
 ## Features
 - Presets **A/B/C**
 - **HU / EN / DE** UI
