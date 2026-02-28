@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.4.9
+// @version      2.5.0
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.4.9";
+  const SCRIPT_VERSION = "2.5.0";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
@@ -137,10 +137,10 @@
   };
 
   const DEFAULT_STATE = {
-  schemaVersion: STATE_SCHEMA_VERSION,
-  activePreset: 0,
-  presets: [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)],
-  ui: clone(DEFAULT_UI),
+    schemaVersion: STATE_SCHEMA_VERSION,
+    activePreset: 0,
+    presets: [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)],
+    ui: clone(DEFAULT_UI),
   };
 
   /* ================== I18N ================== */
@@ -263,6 +263,7 @@
         clockSaved: "Óra mentve ✓",
         skinOn: "Skin ON ✓",
         skinOff: "Skin OFF",
+        skinWarn: "Skin: Autodarts frissült? (CSS szelektor eltérés gyanú) – lehet, hogy frissíteni kell a Skin CSS-t.",
         lang: "Nyelv frissítve ✓",
       }
     },
@@ -385,6 +386,7 @@
         clockSaved: "Clock saved ✓",
         skinOn: "Skin ON ✓",
         skinOff: "Skin OFF",
+        skinWarn: "Skin: Autodarts update? (selector mismatch) – the Skin CSS selectors may need an update.",
         lang: "Language updated ✓",
       }
     },
@@ -507,6 +509,7 @@
         clockSaved: "Uhr gespeichert ✓",
         skinOn: "Skin AN ✓",
         skinOff: "Skin AUS",
+        skinWarn: "Skin: Autodarts Update? (Selektor passt nicht) – ggf. Skin-CSS-Selektoren aktualisieren.",
         lang: "Sprache aktualisiert ✓",
       }
     }
@@ -651,9 +654,15 @@
   }
 
   let state = loadState();
+  state.schemaVersion = STATE_SCHEMA_VERSION;
   const cfg = () => state.presets[state.activePreset];
 
-  function saveStateNow(){ try { localStorage.setItem(STORE_KEY_STATE, JSON.stringify(state)); } catch {} }
+  function saveStateNow(){ 
+    try { 
+      state.schemaVersion = STATE_SCHEMA_VERSION;
+      localStorage.setItem(STORE_KEY_STATE, JSON.stringify(state)); 
+    } catch {} 
+  }
   let saveTimer = null;
   function saveStateDebounced() {
     if (saveTimer) clearTimeout(saveTimer);
@@ -1395,6 +1404,51 @@ svg.ad-board-svg text{
 }
 `;
 
+    // ================== SKIN – selector health-check ==================
+  const SKIN_HEALTH_SSKEY = () => `ad_core_skin_sel_warned_${SCRIPT_VERSION}`;
+  let skinHealthTimer = 0;
+  let skinHealthAttempts = 0;
+
+  function runSkinHealthCheck() {
+    const c = cfg();
+    if (!c || !c.SKIN_CSS) return;
+    if (!location.pathname.startsWith("/matches/")) return;
+
+    const turn = document.querySelector("#ad-ext-turn");
+    const players = document.querySelector("#ad-ext-player-display");
+
+    // ha még nem töltött be a meccs UI, próbáljuk újra párszor
+    if (!turn || !players) {
+      if (skinHealthAttempts++ < 15) scheduleSkinHealthCheck();
+      return;
+    }
+
+    // Ha egyik ismert Chakra selector sincs, gyanús: Autodarts update / selector drift
+    const anyKnown = document.querySelector(
+      ".css-tkevr6, .css-19lo6pj, .css-1omnor5, .css-ul22ge, .css-1dkgpmk, .css-1wlduvp, .css-sm8wdq, .css-881tme, .css-rrf7rv, .css-1cdcn26, .css-jbngkd, .css-1emway5"
+    );
+    if (anyKnown) return;
+
+    // toast csak egyszer / session / verzió
+    try {
+      if (sessionStorage.getItem(SKIN_HEALTH_SSKEY()) === "1") return;
+      sessionStorage.setItem(SKIN_HEALTH_SSKEY(), "1");
+    } catch {}
+
+    console.warn("[AD-CORE] Skin health-check: likely selector mismatch after update.");
+    const L = T();
+    const msg = (L && L.toasts && L.toasts.skinWarn) ? L.toasts.skinWarn : "Skin: selector mismatch";
+    if (typeof showToast === "function") showToast(msg);
+  }
+
+  function scheduleSkinHealthCheck() {
+    if (skinHealthTimer) return;
+    skinHealthTimer = window.setTimeout(() => {
+      skinHealthTimer = 0;
+      runSkinHealthCheck();
+    }, 1500);
+  }
+
   function ensureSkinCss() {
     ensureHead(() => {
       const c = cfg();
@@ -1472,7 +1526,9 @@ svg.ad-board-svg text{
         if (core.nextSibling !== st) core.after(st);
       } else if (!st.parentNode) {
         document.head.appendChild(st);
-      }
+        }
+        skinHealthAttempts = 0;
+        scheduleSkinHealthCheck();
     });
   }
 
@@ -3570,6 +3626,12 @@ function ensureMainButtonPosition() {
 
     for (const [sel, label, required] of checks) {
       const ok = !!document.querySelector(sel);
+      const isOptional = (sel === ".css-rc3vw3" || sel === ".css-1cdcn26" || sel === "svg.ad-board-svg");
+
+      const text  = ok ? L.diagOk : (isOptional ? L.diagOptional : L.diagMissing);
+      const level = ok ? "ok"    : (isOptional ? "warn"         : "danger");
+
+      const pill = makePill(text, level);
 
       let text, level;
       if (ok) {
