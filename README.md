@@ -1,5 +1,7 @@
 # Autodarts CORE (Userscript)
 
+**Nyelvek:** [English](README.md) · [Magyar](README.hu.md) · [Deutsch](README.de.md)
+
 A modular userscript for **play.autodarts.io** that adds a configurable **CORE panel** with presets and UI enhancements.
 
 ## Features
