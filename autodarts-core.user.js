@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.5.2
+// @version      2.5.3
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.5.2";
+  const SCRIPT_VERSION = "2.5.3";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
@@ -590,32 +590,6 @@
     const obs = new MutationObserver(() => { if (document.body) { obs.disconnect(); cb(); } });
     obs.observe(document.documentElement, { childList: true, subtree: true });
   }
-  function makeScope() {
-    const ac = new AbortController();
-    const timers = new Set();
-    return {
-      signal: ac.signal,
-      abort: () => {
-        ac.abort();
-        for (const t of timers) clearInterval(t), clearTimeout(t);
-        timers.clear();
-      },
-      setTimeout: (fn, ms) => {
-        const id = window.setTimeout(() => { timers.delete(id); fn(); }, ms);
-        timers.add(id);
-        return id;
-      },
-      setInterval: (fn, ms) => {
-        const id = window.setInterval(fn, ms);
-        timers.add(id);
-        return id;
-      }
-    };
-  }
-
-  let scopeMain = null;  // teljes script scope
-  let scopeWin  = null;  // win music scope
-  let scopeClock = null; // clock extra hookok scope (ha akarsz)
   
   function matchHotkey(e, def) {
     if (!def) return false;
@@ -644,6 +618,40 @@
     // minimál védelem: ne tudjon idézőjelet / sortörést “kiszúrni” a CSS-be
     return String(u || "").replace(/["\\\n\r]/g, "");
   }
+
+    /* ================== SCOPE (cleanup for listeners/timers) ================== */
+  function makeScope(){
+    const off = [];
+    const timers = new Set();
+    return {
+      on(target, type, handler, options){
+        target.addEventListener(type, handler, options);
+        off.push(() => {
+          try { target.removeEventListener(type, handler, options); } catch {}
+        });
+      },
+      setTimeout(fn, ms){
+        const id = window.setTimeout(() => { timers.delete(id); fn(); }, ms);
+        timers.add(id);
+        return id;
+      },
+      setInterval(fn, ms){
+        const id = window.setInterval(fn, ms);
+        timers.add(id);
+        return id;
+      },
+      abort(){
+        // remove listeners
+        while (off.length) { try { off.pop()(); } catch {} }
+        // clear timers
+        for (const t of timers) { clearTimeout(t); clearInterval(t); }
+        timers.clear();
+      }
+    };
+  }
+
+  let scopeMain = null; // resize/fullscreen stb.
+  let scopeWin  = null; // win-music stop hookok
 
   /* ================== STATE LOAD/MIGRATE ================== */
   function normalizeState(st) {
