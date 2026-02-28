@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE (All-in-One + Clock + BoardManager Back + Skin Toggle) v2.4.6
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.4.7
+// @version      2.4.8
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.4.7";
+  const SCRIPT_VERSION = "2.4.8";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
