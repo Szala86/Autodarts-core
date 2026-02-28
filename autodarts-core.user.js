@@ -104,6 +104,7 @@
   };
 
   const DEFAULT_CLOCK = {
+    blL: null, blB: null,         // BL anchor az órához
     enabled: false,
     x: null,
     y: null,
@@ -116,6 +117,8 @@
   };
 
   const DEFAULT_UI = {
+    panelL: null, panelB: null,   // BL anchor a panelhez
+    btnL: null,   btnB: null,     // BL anchor a fő gombhoz
     open: false,
     x: null,
     y: null,
@@ -163,7 +166,7 @@
       markerInfo: "Board marker: megjelöli a tábla SVG-t (ad-board-svg). Ha a custom tábla skin ezt használja, maradjon ON.",
       bmInfo: "A /boards oldalon betesz egy 'Vissza az Autodartsba' gombot (touch/fullscreenben hasznos).",
       bmBackLabel: "Vissza az Autodartsba",
-      skinInfo: "Skin/Layout: Ha Stylebotot is használsz az Autodarts oldalon, kapcsold ki (vagy tiltsd le az Autodartsra), mert összeakadhat ezzel a szkripttel és furcsa kinézetet / duplázott stílust okozhat. Autodarts frissítésnél a css-xxxxx classok változhatnak, ilyenkor frissíteni kell a szelektorokat.",
+      skinInfo: "Skin/Layout: Ha használsz Stylebotot ehhez az oldalhoz, kapcsold ki, mert összeakadhat ezzel a userscripttel. (Autodarts frissítésnél a css-xxxxx classnevek változhatnak, ilyenkor frissíteni kell a CSS szelektorokat.)",
       tab: {
         general:  "Általános",
         skin:     "Skin / Layout",
@@ -279,7 +282,7 @@
       markerInfo: "Board marker: marks the board SVG (ad-board-svg). Keep ON if your custom board skin relies on it.",
       bmInfo: "Adds a 'Back to Autodarts' button on /boards (useful in touchscreen/fullscreen).",
       bmBackLabel: "Back to Autodarts",
-      skinInfo: "Skin/Layout: If you also use Stylebot on Autodarts, disable it for this site to avoid conflicts (double styling / broken layout). If Autodarts updates and css-xxxxx classnames change, selectors may need an update.",
+      skinInfo: "Skin/Layout: If you use Stylebot on this site, turn it off because it can conflict with this userscript. (After Autodarts updates, the css-xxxxx class names may change; then the CSS selectors must be updated.)",
       tab: {
         general:  "General",
         skin:     "Skin / Layout",
@@ -395,7 +398,7 @@
       markerInfo: "Board Marker: markiert das Board-SVG (ad-board-svg). Anlassen, wenn dein Board-Skin darauf basiert.",
       bmInfo: "Fügt auf /boards einen 'Zurück zu Autodarts' Button hinzu (für Touch/Fullscreen hilfreich).",
       bmBackLabel: "Zurück zu Autodarts",
-      skinInfo: "Skin/Layout: Wenn du zusätzlich Stylebot für Autodarts nutzt, deaktiviere es für diese Seite, sonst kann es zu Konflikten kommen (doppeltes Styling / kaputtes Layout). Wenn Autodarts updatet und css-xxxxx Klassen sich ändern, müssen die Selektoren ggf. angepasst werden.",
+      skinInfo: "Skin/Layout: Wenn du Stylebot auf dieser Seite verwendest, schalte ihn aus, weil er mit diesem Userscript kollidieren kann. (Nach Autodarts-Updates können sich css-xxxxx Klassennamen ändern; dann müssen die CSS-Selektoren aktualisiert werden.)",
       tab: {
         general:  "Allgemein",
         skin:     "Skin / Layout",
@@ -1388,9 +1391,8 @@ svg.ad-board-svg text{
       const spacing = clamp(Number(c.SKIN_SPACING_PLAYER ?? 20), 0, 80);
       const alpha = clamp(Number(c.SKIN_BG_OVERLAY_ALPHA ?? 0.55), 0, 1);
       const url = sanitizeUrl(c.SKIN_BG_URL, DEFAULT_CFG.SKIN_BG_URL);
-      const pbgRGB = hexToRgbString(sanitizeHex(c.SKIN_PLAYER_BG_HEX, "#000000"));
-      const pbgOp  = clamp(Number(c.SKIN_PLAYER_BG_OPACITY ?? 0.35), 0, 1);
-
+      const pbgRGB = hexToRgbString(sanitizeHex(c.SKIN_PLAYER_BG_HEX, DEFAULT_CFG.SKIN_PLAYER_BG_HEX));
+      const pbgOp  = clamp(Number(c.SKIN_PLAYER_BG_OPACITY ?? DEFAULT_CFG.SKIN_PLAYER_BG_OPACITY), 0, 1);
       const dyn = String.raw`
 :root{
   --ad-ui-scale: ${scale};
@@ -2146,6 +2148,8 @@ function scanWinMusic() {
       const safe = ensureVisible(nx, ny, r.width, r.height);
       cs.x = Math.round(safe.x);
       cs.y = Math.round(safe.y);
+      cs.blL = cs.x;
+      cs.blB = Math.round(window.innerHeight - (cs.y + r.height));
       applyClockPosition();
     }, { passive: true });
 
@@ -2214,7 +2218,10 @@ function scanWinMusic() {
     const cs = state.ui.clock;
 
     const r = clockEl.getBoundingClientRect();
-
+    if (typeof cs.blL === "number" && typeof cs.blB === "number") {
+     cs.x = Math.round(cs.blL);
+     cs.y = Math.round(window.innerHeight - cs.blB - r.height);
+    }
     let x = cs.x;
     let y = cs.y;
 
@@ -2253,6 +2260,8 @@ function scanWinMusic() {
   function resetClockPosition() {
     state.ui.clock.x = null;
     state.ui.clock.y = null;
+    state.ui.clock.blL = null;
+    state.ui.clock.blB = null;
     applyClockPosition();
     saveStateDebounced();
   }
@@ -2428,42 +2437,78 @@ function scanWinMusic() {
     saveStateDebounced();
   }
 
-  function ensurePanelPosition() {
-    if (!panel) return;
-    const r = panel.getBoundingClientRect();
+  let __migratedPanelBL = false;
 
-    // hagyjunk helyet alul a 44px-es fő gombnak + padding
-    const RESERVED_BOTTOM = 44 + 16 + 12;
+function ensurePanelPosition() {
+  if (!panel) return;
+  const r = panel.getBoundingClientRect();
 
-    let x = state.ui.x;
-    let y = state.ui.y;
+  // hagyjunk helyet alul a 44px-es fő gombnak + padding
+  const RESERVED_BOTTOM = 44 + 16 + 12;
 
-    if (typeof x !== "number") x = 16;
-    if (typeof y !== "number") y = Math.round(window.innerHeight - r.height - RESERVED_BOTTOM);
-
-    const safe = ensureVisible(x, y, r.width, r.height, 8);
-
-    panel.style.left = Math.round(safe.x) + "px";
-    panel.style.top  = Math.round(safe.y) + "px";
+  // 1) Egyszeri migráció régi x/y-ból BL-be (ha volt mentett pozíciód)
+  if (!__migratedPanelBL) {
+    if (typeof state.ui.panelL !== "number" && typeof state.ui.x === "number") state.ui.panelL = state.ui.x;
+    if (typeof state.ui.panelB !== "number" && typeof state.ui.y === "number") state.ui.panelB = Math.round(window.innerHeight - (state.ui.y + r.height));
+    __migratedPanelBL = true;
+    saveStateDebounced();
   }
 
-  function ensureMainButtonPosition() {
-    if (!uiBtn) return;
-    const size = 44;
+  const wantL = (typeof state.ui.panelL === "number") ? state.ui.panelL : 16;
+  const wantB = (typeof state.ui.panelB === "number") ? state.ui.panelB : RESERVED_BOTTOM;
 
-    let x = state.ui.btnX;
-    let y = state.ui.btnY;
+  const wantX = Math.round(wantL);
+  const wantY = Math.round(window.innerHeight - wantB - r.height);
 
-    if (typeof x !== "number") x = 16;
-    if (typeof y !== "number") y = window.innerHeight - size - 16;
+  const safe = ensureVisible(wantX, wantY, r.width, r.height, 8);
 
-    const safe = ensureVisible(x, y, size, size, 8);
+  panel.style.left = Math.round(safe.x) + "px";
+  panel.style.top  = Math.round(safe.y) + "px";
 
-    uiBtn.style.left = Math.round(safe.x) + "px";
-    uiBtn.style.top  = Math.round(safe.y) + "px";
-    uiBtn.style.bottom = "auto";
-    uiBtn.style.right  = "auto";
+  // csak akkor írjuk át a mentést, ha ténylegesen clamping történt
+  if (Math.round(safe.x) !== wantX || Math.round(safe.y) !== wantY) {
+    state.ui.panelL = Math.round(safe.x);
+    state.ui.panelB = Math.round(window.innerHeight - (safe.y + r.height));
+    state.ui.x = Math.round(safe.x);
+    state.ui.y = Math.round(safe.y);
+    saveStateDebounced();
   }
+}
+
+  let __migratedBtnBL = false;
+
+function ensureMainButtonPosition() {
+  if (!uiBtn) return;
+  const size = 44;
+
+  if (!__migratedBtnBL) {
+    if (typeof state.ui.btnL !== "number" && typeof state.ui.btnX === "number") state.ui.btnL = state.ui.btnX;
+    if (typeof state.ui.btnB !== "number" && typeof state.ui.btnY === "number") state.ui.btnB = Math.round(window.innerHeight - (state.ui.btnY + size));
+    __migratedBtnBL = true;
+    saveStateDebounced();
+  }
+
+  const wantL = (typeof state.ui.btnL === "number") ? state.ui.btnL : 16;
+  const wantB = (typeof state.ui.btnB === "number") ? state.ui.btnB : 16;
+
+  const wantX = Math.round(wantL);
+  const wantY = Math.round(window.innerHeight - wantB - size);
+
+  const safe = ensureVisible(wantX, wantY, size, size, 8);
+
+  uiBtn.style.left = Math.round(safe.x) + "px";
+  uiBtn.style.top  = Math.round(safe.y) + "px";
+  uiBtn.style.bottom = "auto";
+  uiBtn.style.right  = "auto";
+
+  if (Math.round(safe.x) !== wantX || Math.round(safe.y) !== wantY) {
+    state.ui.btnL = Math.round(safe.x);
+    state.ui.btnB = Math.round(window.innerHeight - (safe.y + size));
+    state.ui.btnX = Math.round(safe.x);
+    state.ui.btnY = Math.round(safe.y);
+    saveStateDebounced();
+  }
+}
 
   function presetLabel(i) { return i === 0 ? "A" : i === 1 ? "B" : "C"; }
 
@@ -2695,6 +2740,8 @@ function scanWinMusic() {
       state.ui.btnY = Math.round(safe.y);
       uiBtn.style.left = state.ui.btnX + "px";
       uiBtn.style.top  = state.ui.btnY + "px";
+      state.ui.btnL = state.ui.btnX;
+      state.ui.btnB = Math.round(window.innerHeight - (state.ui.btnY + 44));
     }, { passive: true });
 
     window.addEventListener("pointerup", () => {
@@ -2808,6 +2855,8 @@ function scanWinMusic() {
       state.ui.y = Math.round(safe.y);
       panel.style.left = state.ui.x + "px";
       panel.style.top  = state.ui.y + "px";
+      state.ui.panelL = state.ui.x;
+      state.ui.panelB = Math.round(window.innerHeight - (state.ui.y + r.height));
     }, { passive: true });
 
     window.addEventListener("pointerup", () => {
@@ -2823,6 +2872,12 @@ function scanWinMusic() {
       if (clockEl) applyClockPosition();
       dirtySkin();
       scheduleUpdate();
+    }, { passive: true });
+
+    window.addEventListener("fullscreenchange", () => {
+      if (panel && panel.style.display !== "none") ensurePanelPosition();
+      ensureMainButtonPosition();
+      if (clockEl) applyClockPosition();
     }, { passive: true });
 
     renderPanel();
@@ -3123,7 +3178,7 @@ function scanWinMusic() {
     rowBtns.style.gap = "8px";
 
     const btnResetPos = mkButton(L.posReset, () => {
-      state.ui.x = null; state.ui.y = null;
+      state.ui.x = null; state.ui.y = null; state.ui.panelL = null; state.ui.panelB = null;
       saveStateDebounced();
       requestAnimationFrame(ensurePanelPosition);
       showToast(L.toasts.posReset);
@@ -3131,7 +3186,7 @@ function scanWinMusic() {
     btnResetPos.style.flex = "1";
 
     const btnResetGearPos = mkButton(L.btnPosReset, () => {
-      state.ui.btnX = null; state.ui.btnY = null;
+      state.ui.btnX = null; state.ui.btnY = null; state.ui.btnL = null; state.ui.btnB = null;
       saveStateDebounced();
       ensureMainButtonPosition();
       showToast(L.toasts.btnPosReset);
@@ -3450,7 +3505,7 @@ function scanWinMusic() {
         // player bg color
         const pbg = document.createElement("input");
         pbg.type = "color";
-        pbg.value = sanitizeHex(c.SKIN_PLAYER_BG_HEX, "#000000");
+        pbg.value = sanitizeHex(c.SKIN_PLAYER_BG_HEX, DEFAULT_CFG.SKIN_PLAYER_BG_HEX);
         pbg.addEventListener("input", () => {
           c.SKIN_PLAYER_BG_HEX = sanitizeHex(pbg.value, c.SKIN_PLAYER_BG_HEX);
           saveStateDebounced();
@@ -3463,7 +3518,7 @@ function scanWinMusic() {
         const pbo = document.createElement("input");
         pbo.type = "range";
         pbo.min = "0"; pbo.max = "1"; pbo.step = "0.05";
-        pbo.value = String(clamp(Number(c.SKIN_PLAYER_BG_OPACITY ?? 0.35), 0, 1));
+        pbo.value = String(clamp(Number(c.SKIN_PLAYER_BG_OPACITY ?? DEFAULT_CFG.SKIN_PLAYER_BG_OPACITY), 0, 1));
         const pbo0 = Number(pbo.value);
         const pboRow = mkSliderRow(L.skinText.playerBgOpacity, pbo, `${Math.round(pbo0*100)}%`, "ok", compact);
         box.appendChild(pboRow.row);
