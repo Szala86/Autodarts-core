@@ -4,123 +4,104 @@
 
 **Sprachen:** [English](README.md) · [Magyar](README.hu.md) · [Deutsch](README.de.md)
 
-Community-Userscript für **play.autodarts.io**: CORE-Panel, Presets, Skin/Layout und viele Quality-of-Life-Features.
+Ein modulares Userscript für **play.autodarts.io**, das ein konfigurierbares **CORE Panel** mit Presets und UI-Features hinzufügt.
 
 > ⚠️ Hinweis: Community-Projekt, **nicht offiziell** und nicht mit Autodarts verbunden.
 
----
-
-## Features (Highlights)
-
-- **CORE Control Panel** (drag & drop, kompakter Modus, Hilfe)
-- **3 Presets (A/B/C)** + Hotkeys
-- **HU/EN/DE** Sprachunterstützung
-- **Safe Mode** (verhindert extreme UI-Einstellungen)
-- **Skin / Layout Modul**
-  - UI-Skalierung, Spieler-Abstand
-  - Background-URL + Overlay-Transparenz
-  - Hintergrundfarbe/Transparenz für Player-Karten
-  - Optionales **Auto-Off** bei Selector-Mismatch nach Autodarts-Update
-- **Wurf → Punkte** (z.B. T20 = 60) + optionales Original-Label in der Ecke
-- **Total Overlay Fix** (stabiles Layout)
-- **Checkout Hinweis** Markierung
-- **Aktiver Spieler Highlight**
-- **Triple Animation**
-- **Win Sound** (optional)
-- **Floating Clock** (drag, scale, 24h toggle, seconds toggle)
-- **Board Marker** (`ad-board-svg` Klasse für das Board-SVG)
-- **Back-to-Autodarts Button** auf `/boards` (Touch/Vollbild)
-- **Diagnose Tab** (Debug Info + Selector Checks)
-- JSON **Export / Import** für Presets & Einstellungen
+## Features
+- Presets **A/B/C**
+- **HU / EN / DE** UI
+- **Safe Mode**
+- Schaltbares **Skin / Layout** (integriertes CSS)
+- Wurfwert → Punkte (**T20 → 60**, **D2 → 4**, usw.)
+- **Total overlay** Fix
+- Checkout-Tipp Hervorhebung
+- Hervorhebung des aktiven Spielers
+- Triple-Treffer Animation
+- Optionale Sieg-Musik
+- Schwebendes Uhr-Widget
+- Board-Marker Utility
+- Optionaler **„Zurück zu Autodarts“** Button auf `/boards`
 
 ---
 
-## Voraussetzungen
+## Vorschau
 
-- Firefox / Chrome / Edge + Userscript-Manager:
-  - **Violentmonkey** (empfohlen)
-  - Tampermonkey / Greasemonkey
+### GIFs
+<img src="docs/media/anim_panel_and_clock.gif" width="520" alt="Panel + Uhr" />
+<br/>
+<img src="docs/media/anim_triple_hit.gif" width="520" alt="Triple hit animation" />
+
+### Screenshots
+<img src="docs/media/ui_panel_general.png" width="320" alt="Allgemein" />
+<img src="docs/media/ui_skin_layout.png" width="320" alt="Skin / Layout" />
+<img src="docs/media/ui_throw_points.png" width="320" alt="Wurfpunkte" />
+<img src="docs/media/ui_total_overlay.png" width="320" alt="Gesamtwert (overlay)" />
+<img src="docs/media/ui_checkout_tip.png" width="320" alt="Checkout Tipp" />
+<img src="docs/media/ui_clock_widget.png" width="320" alt="Uhr Widget" />
+
+---
+
+## Unterstützte Seiten
+- Match UI: `https://play.autodarts.io/matches/...`
+- Boards-Seite (optional): `https://play.autodarts.io/boards`
+
+---
+
+## Hotkeys
+- **Shift+F** — Panel ein/aus
+- **Shift+1 / Shift+2 / Shift+3** — Preset A / B / C
+- **Shift+M** — Safe Mode umschalten
+- **Shift+H** — Hilfe umschalten
+- **Shift+T** — Uhr umschalten
+- **Shift+R** — Uhr reset
+- **ESC** — schließen
 
 ---
 
 ## Installation
 
-1. Userscript-Manager installieren (Violentmonkey/Tampermonkey).
-2. Installation aus **dist** (empfohlen):
-   - https://raw.githubusercontent.com/Szala86/Autodarts-core/main/dist/autodarts-core.user.js
-3. Öffnen: https://play.autodarts.io/  
-4. Panel öffnen: **Shift + F** (oder per Gear-Button)
+### Violentmonkey (Firefox)
+1. **Violentmonkey** installieren
+2. RAW Script URL öffnen:
+   `https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js`
+3. **Install** klicken
 
-> Tipp: Bitte nur **ein** “Autodarts – CORE” Script aktiv lassen.
+### Tampermonkey (Chrome)
+1. **Tampermonkey** installieren
+2. RAW Script URL öffnen:
+   `https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js`
+3. **Install**
 
 ---
 
-## Hotkeys
-
-- **Shift + F** — Panel an/aus
-- **Shift + 1 / 2 / 3** — Preset A / B / C
-- **Shift + M** — Safe Mode an/aus
-- **Shift + H** — Hilfe an/aus
-- **Shift + T** — Uhr an/aus
-- **Shift + R** — Uhr Reset
-- **ESC** — Panel schließen
+## Updates
+Im Userscript-Manager:
+- “Check for updates” (oder Auto-Update)
 
 ---
 
 ## Hinweise
+- Presets A/B/C speichern getrennte Einstellungen.
+- Safe Mode begrenzt extreme Werte, damit das UI stabil bleibt.
+- Wenn du **Stylebot** für play.autodarts.io nutzt, bitte deaktivieren (Konflikte mit Skin/Layout möglich).
 
-- **Skin/Layout vs Stylebot:** Wenn Stylebot auf play.autodarts.io aktiv ist, bitte deaktivieren (Konflikte möglich).
-- **Positionen:** Panel/Gear/Uhr sind frei verschiebbar, Position wird gespeichert.
-- **Export/Import:** Exportiert/Importiert Einstellungen als JSON.
+---
+
+## Credits / Attribution
+- **Back-to-AD-Button**: basiert auf **MartinHH**’s Script
+- **Animate Triple Autodarts** / Triple Animation Konzept: basiert auf **amazingjin**’s Script
 
 ---
 
 ## Troubleshooting
-
-### Panel erscheint nicht
-- Script ist aktiv?
-- Userscript-Manager meldet “SyntaxError”? Dann lädt das Script nicht.
-- Mehrere CORE Scripts gleichzeitig aktiv? Bitte nur eins.
-
-### Skin nach Autodarts Update kaputt
-- “Auto-Disable bei Mismatch” im Skin-Tab aktivieren.
-- Bei Warn-Toast: Autodarts hat vermutlich `css-xxxxx` Klassen geändert → Skin-Selektoren müssen aktualisiert werden.
+Nach Autodarts-Updates können sich Chakra Hash-Klassen (`.css-xxxxx`) ändern.
+Bevorzuge stabile Selektoren wie:
+- `#ad-ext-turn`
+- `#ad-ext-player-display`
+- eigene Klassen
 
 ---
 
-## Repo Struktur
-
-- `src/` – Source (editierbar)
-- `dist/` – Release Build (von hier installieren)
-
----
-
-## Development / Release
-
-1. Bearbeiten: `src/autodarts-core.user.js`
-2. Version erhöhen (2 Stellen):
-   - `// @version      x.y.z`
-   - `const SCRIPT_VERSION = "x.y.z";`
-3. `src` komplett nach `dist/autodarts-core.user.js` kopieren
-4. Commit & Push:
-   - src Commit
-   - dist Commit: “Release x.y.z”
-5. Update-Quelle:
-   - https://raw.githubusercontent.com/Szala86/Autodarts-core/main/dist/autodarts-core.user.js
-
----
-
-## Credits / 3rd party
-
-- **Back-to-AD-Button on Autodarts Board-Manager** — **MartinHH** (MIT)  
-  https://greasyfork.org/en/scripts/490771-back-to-ad-button-on-autodarts-board-manager
-
-- **Animate Triple Autodarts** — **amazingjin** (MIT)  
-  https://greasyfork.org/scripts/490067-animate-triple-autodarts
-
----
-
-## Support / Issues
-
-Bugs & Feature Requests:  
-https://github.com/Szala86/Autodarts-core/issues
+## Lizenz
+Empfohlen: `LICENSE` Datei hinzufügen.
