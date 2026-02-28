@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.5.3
+// @version      2.5.4
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.5.3";
+  const SCRIPT_VERSION = "2.5.4";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
