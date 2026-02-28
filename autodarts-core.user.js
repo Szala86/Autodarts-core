@@ -34,17 +34,6 @@
   "ad_core_state_v227",
 ];
   const STATE_SCHEMA_VERSION = 1;
-  const LEGACY_KEYS = [
-    "ad_core_state_v243",
-    "ad_core_state_v242",
-    "ad_core_state_v241",
-    "ad_core_state_v240",
-    "ad_core_state_v233",
-    "ad_core_state_v232",
-    "ad_core_state_v231",
-    "ad_core_state_v230",
-    "ad_core_state_v227",
-  ];
   const LEGACY_CLOCK_KEY = "ad_clock_only_v11";
 
   const clone = (obj) => (typeof structuredClone === "function")
