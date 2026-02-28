@@ -2,22 +2,22 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.5.5
+// @version      2.5.6
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
 // @inject-into  content
 // @homepageURL  https://github.com/Szala86/Autodarts-core
 // @supportURL   https://github.com/Szala86/Autodarts-core/issues
-// @downloadURL  https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
-// @updateURL    https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
+// @downloadURL  https://raw.githubusercontent.com/Szala86/Autodarts-core/main/dist/autodarts-core.user.js
+// @updateURL    https://raw.githubusercontent.com/Szala86/Autodarts-core/main/dist/autodarts-core.user.js
 // @description  CORE panel with presets + HU/EN/DE + SafeMode + Total overlay fix + integrated Floating Clock + optional Back-to-Autodarts button on /boards + integrated Stylebot CSS as toggleable "Skin/Layout" module. Includes performance optimizations (dirty flags + scoped observers).
 // ==/UserScript==
 
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.5.5";
+  const SCRIPT_VERSION = "2.5.6";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
