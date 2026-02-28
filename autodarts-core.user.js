@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.5.1
+// @version      2.5.2
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.5.1";
+  const SCRIPT_VERSION = "2.5.2";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
@@ -48,6 +48,7 @@
 
     // NEW: integrated Stylebot CSS as toggleable module
     SKIN_CSS: true,
+    SKIN_AUTO_DISABLE_ON_MISMATCH: true,
 
         // Skin / Layout adjustable
     SKIN_UI_SCALE: 1,
@@ -216,6 +217,7 @@
         playerBgOpacity: "Player háttér áttetszőség",
         bgUrl: "Háttérkép URL",
         overlay: "Overlay áttetszőség",
+        autoDisable: "Auto kikapcsolás, ha frissítés után elcsúszik (ajánlott)",
       },
       clockText: {
         enabled: "Óra engedélyezése",
@@ -265,6 +267,7 @@
         skinOff: "Skin OFF",
         skinWarn: "Skin: Autodarts frissült? (CSS szelektor eltérés gyanú) – lehet, hogy frissíteni kell a Skin CSS-t.",
         lang: "Nyelv frissítve ✓",
+        skinAutoOff: "Skin AUTO-OFF (selector eltérés) ✓",
       }
     },
 
@@ -339,6 +342,7 @@
         playerBgOpacity: "Player background opacity",
         bgUrl: "Background image URL",
         overlay: "Overlay opacity",
+        autoDisable: "Auto-disable if selectors mismatch after update (recommended)",
       },
       clockText: {
         enabled: "Enable clock",
@@ -388,6 +392,7 @@
         skinOff: "Skin OFF",
         skinWarn: "Skin: Autodarts update? (selector mismatch) – the Skin CSS selectors may need an update.",
         lang: "Language updated ✓",
+        skinAutoOff: "Skin AUTO-OFF (selector mismatch) ✓",
       }
     },
 
@@ -462,6 +467,7 @@
         playerBgOpacity: "Player-Hintergrund Transparenz",
         bgUrl: "Hintergrundbild URL",
         overlay: "Overlay-Transparenz",
+        autoDisable: "Auto-Deaktivieren bei Selektor-Mismatch nach Update (empfohlen)",
       },
       clockText: {
         enabled: "Uhr aktivieren",
@@ -511,6 +517,7 @@
         skinOff: "Skin AUS",
         skinWarn: "Skin: Autodarts Update? (Selektor passt nicht) – ggf. Skin-CSS-Selektoren aktualisieren.",
         lang: "Sprache aktualisiert ✓",
+        skinAutoOff: "Skin AUTO-AUS (Selektor-Mismatch) ✓",
       }
     }
   };
@@ -583,6 +590,33 @@
     const obs = new MutationObserver(() => { if (document.body) { obs.disconnect(); cb(); } });
     obs.observe(document.documentElement, { childList: true, subtree: true });
   }
+  function makeScope() {
+    const ac = new AbortController();
+    const timers = new Set();
+    return {
+      signal: ac.signal,
+      abort: () => {
+        ac.abort();
+        for (const t of timers) clearInterval(t), clearTimeout(t);
+        timers.clear();
+      },
+      setTimeout: (fn, ms) => {
+        const id = window.setTimeout(() => { timers.delete(id); fn(); }, ms);
+        timers.add(id);
+        return id;
+      },
+      setInterval: (fn, ms) => {
+        const id = window.setInterval(fn, ms);
+        timers.add(id);
+        return id;
+      }
+    };
+  }
+
+  let scopeMain = null;  // teljes script scope
+  let scopeWin  = null;  // win music scope
+  let scopeClock = null; // clock extra hookok scope (ha akarsz)
+  
   function matchHotkey(e, def) {
     if (!def) return false;
     if (!!def.shift !== e.shiftKey) return false;
@@ -1439,6 +1473,19 @@ svg.ad-board-svg text{
     const L = T();
     const msg = (L && L.toasts && L.toasts.skinWarn) ? L.toasts.skinWarn : "Skin: selector mismatch";
     if (typeof showToast === "function") showToast(msg);
+
+    // optional auto-disable
+    if (c.SKIN_AUTO_DISABLE_ON_MISMATCH) {
+      c.SKIN_CSS = false;
+      dirtySkin();
+      saveStateDebounced();
+      scheduleUpdate();
+
+      const L2 = T();
+      if (typeof showToast === "function") {
+        showToast(L2?.toasts?.skinAutoOff || "Skin AUTO-OFF");
+      }
+    }
   }
 
   function scheduleSkinHealthCheck() {
@@ -2031,36 +2078,40 @@ function stopWinAudio() {
   safe(() => { winAudio.pause(); winAudio.currentTime = 0; });
 }
 
-function installWinStopHooksOnce() {
-  if (installWinStopHooksOnce._done) return;
-  installWinStopHooksOnce._done = true;
+function installWinStopHooks() {
+  if (scopeWin) scopeWin.abort();
+  scopeWin = makeScope();
 
   // ✅ Stop gombokra
-  document.addEventListener("click", (e) => {
+  scopeWin.on(document, "click", (e) => {
     const btn = e.target?.closest?.("button, a");
     if (!btn) return;
     const txt = ((btn.textContent || "") + " " + (btn.getAttribute("aria-label") || "")).trim();
     if (RE_STOP_BTN.test(txt)) stopWinAudio();
-  }, true);
+  }, true); // capture
 
   // ✅ Navigáció / oldalváltás esetén is álljon le
   const onNav = () => stopWinAudio();
-  window.addEventListener("popstate", onNav, true);
-  window.addEventListener("hashchange", onNav, true);
+  scopeWin.on(window, "popstate", onNav, true);
+  scopeWin.on(window, "hashchange", onNav, true);
 
-  // SPA route váltás (Autodarts is ilyen)
-  const _ps = history.pushState;
-  history.pushState = function () {
-    const r = _ps.apply(this, arguments);
-    onNav();
-    return r;
-  };
-  const _rs = history.replaceState;
-  history.replaceState = function () {
-    const r = _rs.apply(this, arguments);
-    onNav();
-    return r;
-  };
+  // SPA route váltás (history patch) – ezt nem lehet “unpatch”-elni, ezért csak egyszer
+  if (!installWinStopHooks._patched) {
+    installWinStopHooks._patched = true;
+
+    const _ps = history.pushState;
+    history.pushState = function () {
+      const r = _ps.apply(this, arguments);
+      onNav();
+      return r;
+    };
+    const _rs = history.replaceState;
+    history.replaceState = function () {
+      const r = _rs.apply(this, arguments);
+      onNav();
+      return r;
+    };
+  }
 }
 
 function initWinMusicOnce() {
@@ -2070,7 +2121,7 @@ function initWinMusicOnce() {
   winAudio.preload = "auto";
   winAudio.volume = clamp(Number(cfg().WIN_VOLUME ?? 1.0), 0, 1);
 
-  installWinStopHooksOnce();
+  installWinStopHooks();
 
   const unlock = () => {
     if (winUnlocked || !winAudio) return;
@@ -2437,6 +2488,7 @@ function scanWinMusic() {
     if (!c.ACTIVE_PLAYER_HIGHLIGHT) clearActiveClasses();
     if (!c.TRIPLE_ANIM) clearTripleClasses();
     if (!cfg().WIN_MUSIC) stopWinAudio();
+    if (!cfg().WIN_MUSIC && scopeWin) { scopeWin.abort(); scopeWin = null; }
     configureActivePolling();
 
     // toggles can affect everything
@@ -3650,6 +3702,12 @@ function ensureMainButtonPosition() {
         info.textContent = L.skinInfo;
         box.appendChild(info);
 
+        addCheckbox(
+          L.skinText.autoDisable,
+          () => !!c.SKIN_AUTO_DISABLE_ON_MISMATCH,
+          (v) => { c.SKIN_AUTO_DISABLE_ON_MISMATCH = v; }
+        );
+
         // UI scale
         const scale = document.createElement("input");
         scale.type = "range";
@@ -4028,6 +4086,10 @@ function ensureMainButtonPosition() {
 
   /* ================== INIT ================== */
   function start() {
+      // reset main scope (listeners/timers) if start() is ever called again
+    if (scopeMain) scopeMain.abort();
+    scopeMain = makeScope();
+    
     initStickyThrowSelectOnce();
     ensureHead(() => {
       ensureUIStyle();
@@ -4086,8 +4148,8 @@ function ensureMainButtonPosition() {
 
       configureActivePolling();
 
-      window.addEventListener("resize", () => { dirtySkin(); scheduleUpdate(); }, { passive: true });
-      window.addEventListener("fullscreenchange", () => { dirtySkin(); scheduleUpdate(); }, { passive: true });
+      scopeMain.on(window, "resize", () => { dirtySkin(); scheduleUpdate(); }, { passive: true });
+      scopeMain.on(window, "fullscreenchange", () => { dirtySkin(); scheduleUpdate(); }, { passive: true });
 
       setTimeout(scheduleUpdate, 60);
       setTimeout(scheduleUpdate, 200);
