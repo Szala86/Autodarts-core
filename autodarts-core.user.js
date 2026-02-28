@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE (All-in-One + Clock + BoardManager Back + Skin Toggle) v2.4.6
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.4.6
+// @version      2.4.7
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -16,6 +16,8 @@
 
 (() => {
   "use strict";
+
+  const SCRIPT_VERSION = "2.4.7";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state_v245";
@@ -167,6 +169,10 @@
       bmInfo: "A /boards oldalon betesz egy 'Vissza az Autodartsba' gombot (touch/fullscreenben hasznos).",
       bmBackLabel: "Vissza az Autodartsba",
       skinInfo: "Skin/Layout: Ha használsz Stylebotot ehhez az oldalhoz, kapcsold ki, mert összeakadhat ezzel a userscripttel. (Autodarts frissítésnél a css-xxxxx classnevek változhatnak, ilyenkor frissíteni kell a CSS szelektorokat.)",
+      diagCopy: "Debug info másolás",
+      diagSelectors: "Szelektor ellenőrzés",
+      diagOk: "OK",
+      diagMissing: "HIÁNYZIK",
       tab: {
         general:  "Általános",
         skin:     "Skin / Layout",
@@ -180,6 +186,7 @@
         triple:   "Animáció – Tripla találat",
         win:      "Hang – Győzelem",
         clock:    "Widget – Óra",
+        diag: "Diagnosztika",
       },
       fields: {
         bg: "Háttér",
@@ -283,6 +290,10 @@
       bmInfo: "Adds a 'Back to Autodarts' button on /boards (useful in touchscreen/fullscreen).",
       bmBackLabel: "Back to Autodarts",
       skinInfo: "Skin/Layout: If you use Stylebot on this site, turn it off because it can conflict with this userscript. (After Autodarts updates, the css-xxxxx class names may change; then the CSS selectors must be updated.)",
+      diagCopy: "Copy debug info",
+      diagSelectors: "Selector check",
+      diagOk: "OK",
+      diagMissing: "MISSING",
       tab: {
         general:  "General",
         skin:     "Skin / Layout",
@@ -296,6 +307,7 @@
         triple:   "Animation – Triple Hit",
         win:      "Sound – Win",
         clock:    "Widget – Clock",
+        diag: "Diagnostics",
       },
       fields: {
         bg: "Background",
@@ -399,6 +411,10 @@
       bmInfo: "Fügt auf /boards einen 'Zurück zu Autodarts' Button hinzu (für Touch/Fullscreen hilfreich).",
       bmBackLabel: "Zurück zu Autodarts",
       skinInfo: "Skin/Layout: Wenn du Stylebot auf dieser Seite verwendest, schalte ihn aus, weil er mit diesem Userscript kollidieren kann. (Nach Autodarts-Updates können sich css-xxxxx Klassennamen ändern; dann müssen die CSS-Selektoren aktualisiert werden.)",
+      diagCopy: "Debug-Info kopieren",
+      diagSelectors: "Selektor-Check",
+      diagOk: "OK",
+      diagMissing: "FEHLT",
       tab: {
         general:  "Allgemein",
         skin:     "Skin / Layout",
@@ -412,6 +428,7 @@
         triple:   "Animation – Triple-Treffer",
         win:      "Sound – Sieg",
         clock:    "Widget – Uhr",
+        diag: "Diagnose",
       },
       fields: {
         bg: "Hintergrund",
@@ -3092,6 +3109,7 @@ function ensureMainButtonPosition() {
 
     // Modules
     addModuleRow("general",  () => true, () => {}, true,  false, false);
+    addModuleRow("diag",     () => true, () => {}, true,  false, false);
 
     // NEW: Skin toggle
     addModuleRow("skin",     () => c.SKIN_CSS, v => {
@@ -3369,7 +3387,7 @@ function ensureMainButtonPosition() {
         row1.style.gap = "8px";
 
         const btnExport = mkButton(L.export, () => {
-          const payload = { version: "2.4.5", state };
+          const payload = { version: SCRIPT_VERSION, state };
           const json = JSON.stringify(payload, null, 2);
           const blob = new Blob([json], { type: "application/json" });
           const url = URL.createObjectURL(blob);
@@ -3439,6 +3457,110 @@ function ensureMainButtonPosition() {
         box.appendChild(row2);
         break;
       }
+
+    case "diag": {
+      const title = document.createElement("div");
+      title.textContent = tabTitle("diag");
+      title.style.fontWeight = "900";
+      title.style.opacity = "0.95";
+      title.style.marginBottom = "6px";
+      box.appendChild(title);
+
+      const info = {
+      scriptVersion: SCRIPT_VERSION,
+      storeKey: STORE_KEY_STATE,
+      preset: presetLabel(state.activePreset),
+      selectedTab: state.ui.selectedTab,
+      path: location.pathname,
+      safeMode: !!state.ui.safeMode,
+      compact: !!state.ui.compact,
+        modules: {
+        SKIN_CSS: !!c.SKIN_CSS,
+        BOARD_MARKER: !!c.BOARD_MARKER,
+        BM_BACK_BUTTON: !!c.BM_BACK_BUTTON,
+        THROWS_TO_POINTS: !!c.THROWS_TO_POINTS,
+        TOTAL_VIEW: !!c.TOTAL_VIEW,
+        CHECKOUT_VIEW: !!c.CHECKOUT_VIEW,
+        ACTIVE_PLAYER_HIGHLIGHT: !!c.ACTIVE_PLAYER_HIGHLIGHT,
+        TRIPLE_ANIM: !!c.TRIPLE_ANIM,
+        WIN_MUSIC: !!c.WIN_MUSIC,
+        CLOCK_ENABLED: !!state.ui.clock.enabled,
+        },
+     activePollMs: Number(c.ACTIVE_POLL_MS || 0),
+     ua: navigator.userAgent,
+     ts: new Date().toISOString(),
+     };
+
+      // Key-Value blokk
+      const kvWrap = document.createElement("div");
+      kvWrap.style.display = "grid";
+      kvWrap.style.gap = "8px";
+
+    function kv(label, value, level="ok") {
+      const pill = makePill(String(value), level);
+      kvWrap.appendChild(mkRow(label, pill, compact));
+      }
+
+      kv("Version", info.scriptVersion);
+      kv("Store key", info.storeKey);
+      kv("Preset", info.preset);
+      kv("Path", info.path);
+      kv("SafeMode", info.safeMode ? "ON" : "OFF", info.safeMode ? "ok" : "warn");
+      kv("Compact", info.compact ? "ON" : "OFF", info.compact ? "ok" : "warn");
+      kv("Aktív poll", `${info.activePollMs} ms`, info.activePollMs ? "ok" : "warn");
+      box.appendChild(kvWrap);
+
+      // Copy debug
+      const btnRow = document.createElement("div");
+      btnRow.style.display = "flex";
+      btnRow.style.gap = "8px";
+      btnRow.style.marginTop = "10px";
+
+      const btnCopy = mkButton(L.diagCopy, async () => {
+      const txt = JSON.stringify(info, null, 2);
+      try {
+        await navigator.clipboard.writeText(txt);
+        showToast(L.saved);
+      } catch {
+      // fallback
+      prompt("Másold ki:", txt);
+        }
+      }, "primary", compact);
+
+      btnCopy.style.flex = "1";
+      btnRow.appendChild(btnCopy);
+      box.appendChild(btnRow);
+
+      // Selector check
+      const sep = document.createElement("div");
+      sep.style.height = "1px";
+      sep.style.background = "rgba(255,255,255,0.10)";
+      sep.style.margin = "12px 0 10px";
+      box.appendChild(sep);
+
+      const st = document.createElement("div");
+      st.textContent = L.diagSelectors;
+      st.style.fontWeight = "900";
+      st.style.opacity = "0.92";
+      st.style.marginBottom = "8px";
+      box.appendChild(st);
+
+      const checks = [
+        ["#ad-ext-player-display", "Player display (#ad-ext-player-display)"],
+        ["#ad-ext-turn", "Turn cards (#ad-ext-turn)"],
+        [".css-rc3vw3", "Chakra (gyakran használt) .css-rc3vw3"],
+        [".css-1cdcn26", "Chakra (skin root) .css-1cdcn26"],
+        ["svg.ad-board-svg", "Board marker svg.ad-board-svg (marker ON esetén)"],
+      ];
+
+      for (const [sel, label] of checks) {
+        const ok = !!document.querySelector(sel);
+        const pill = makePill(ok ? L.diagOk : L.diagMissing, ok ? "ok" : "danger");
+        box.appendChild(mkRow(label, pill, compact));
+      }
+
+      break;
+    }
 
       case "skin": {
         const info = document.createElement("div");
