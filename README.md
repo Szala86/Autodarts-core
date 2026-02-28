@@ -14,7 +14,13 @@ All-in-one userscript for https://play.autodarts.io:
 - Optional Back-to-Autodarts button on `/boards`
 - Optional integrated Skin/Layout module (replaces Stylebot CSS)
 
-## Install (Violentmonkey / Tampermonkey)
+## Install
+Use Violentmonkey/Tampermonkey and install from:
+dist/autodarts-core.user.js (raw)
+
+## Development
+Edit: src/autodarts-core.user.js  
+Release: copy src → dist, bump @version + SCRIPT_VERSION, commit & push.
 
 Open this URL (RAW userscript):
 https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
