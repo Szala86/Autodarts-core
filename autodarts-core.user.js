@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.5.0
+// @version      2.5.1
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.5.0";
+  const SCRIPT_VERSION = "2.5.1";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
@@ -3626,24 +3626,17 @@ function ensureMainButtonPosition() {
 
     for (const [sel, label, required] of checks) {
       const ok = !!document.querySelector(sel);
-      const isOptional = (sel === ".css-rc3vw3" || sel === ".css-1cdcn26" || sel === "svg.ad-board-svg");
-
-      const text  = ok ? L.diagOk : (isOptional ? L.diagOptional : L.diagMissing);
-      const level = ok ? "ok"    : (isOptional ? "warn"         : "danger");
-
-      const pill = makePill(text, level);
 
       let text, level;
       if (ok) {
-      text = L.diagOk; level = "ok";
+        text = L.diagOk; level = "ok";
       } else if (required) {
         text = L.diagMissing; level = "danger";
         } else {
           text = L.diagOptional; level = "warn";
           }
 
-      const pill = makePill(text, level);
-      box.appendChild(mkRow(label, pill, compact));
+      box.appendChild(mkRow(label, makePill(text, level), compact));
     }
 
       break;
