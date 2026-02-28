@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Autodarts – CORE (All-in-One + Clock + BoardManager Back + Skin Toggle) v2.4.6
+// @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.4.8
+// @version      2.4.9
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.4.8";
+  const SCRIPT_VERSION = "2.4.9";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
@@ -137,9 +137,10 @@
   };
 
   const DEFAULT_STATE = {
-    activePreset: 0,
-    presets: [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)],
-    ui: clone(DEFAULT_UI),
+  schemaVersion: STATE_SCHEMA_VERSION,
+  activePreset: 0,
+  presets: [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)],
+  ui: clone(DEFAULT_UI),
   };
 
   /* ================== I18N ================== */
@@ -175,6 +176,7 @@
       diagSelectors: "Szelektor ellenőrzés",
       diagOk: "OK",
       diagMissing: "HIÁNYZIK",
+      diagOptional: "OPCIONÁLIS",
       tab: {
         general:  "Általános",
         skin:     "Skin / Layout",
@@ -296,6 +298,7 @@
       diagSelectors: "Selector check",
       diagOk: "OK",
       diagMissing: "MISSING",
+      diagOptional: "OPTIONAL",
       tab: {
         general:  "General",
         skin:     "Skin / Layout",
@@ -417,6 +420,7 @@
       diagSelectors: "Selektor-Check",
       diagOk: "OK",
       diagMissing: "FEHLT",
+      diagOptional: "OPTIONAL",
       tab: {
         general:  "Allgemein",
         skin:     "Skin / Layout",
@@ -617,6 +621,7 @@
       ? st.presets.map(p => ({ ...clone(DEFAULT_CFG), ...(p || {}) }))
       : [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)];
 
+    out.schemaVersion = STATE_SCHEMA_VERSION;
     return out;
   }
 
@@ -3469,6 +3474,7 @@ function ensureMainButtonPosition() {
       box.appendChild(title);
 
       const info = {
+      schemaVersion: state.schemaVersion ?? null,  
       scriptVersion: SCRIPT_VERSION,
       storeKey: STORE_KEY_STATE,
       preset: presetLabel(state.activePreset),
@@ -3505,6 +3511,7 @@ function ensureMainButtonPosition() {
 
       kv("Version", info.scriptVersion);
       kv("Store key", info.storeKey);
+      kv("Schema", info.schemaVersion ?? "-", "ok");
       kv("Preset", info.preset);
       kv("Path", info.path);
       kv("SafeMode", info.safeMode ? "ON" : "OFF", info.safeMode ? "ok" : "warn");
@@ -3548,18 +3555,34 @@ function ensureMainButtonPosition() {
       box.appendChild(st);
 
       const checks = [
-        ["#ad-ext-player-display", "Player display (#ad-ext-player-display)"],
-        ["#ad-ext-turn", "Turn cards (#ad-ext-turn)"],
-        [".css-rc3vw3", "Chakra (gyakran használt) .css-rc3vw3"],
-        [".css-1cdcn26", "Chakra (skin root) .css-1cdcn26"],
-        ["svg.ad-board-svg", "Board marker svg.ad-board-svg (marker ON esetén)"],
+      ["#ad-ext-player-display", "Player display (#ad-ext-player-display)", true],
+      ["#ad-ext-turn",          "Turn cards (#ad-ext-turn)",               true],
+
+      // Chakra generált class: nem stabil, nem mindig jelenik meg → opcionális
+      [".css-rc3vw3",           "Chakra (often used) .css-rc3vw3",          false],
+
+      // ez sem “garantált”, de a Skin CSS-nél sokat segít, hagyjuk required helyett inkább optionalnak
+      [".css-1cdcn26",          "Chakra (skin root) .css-1cdcn26",          false],
+
+      // Marker ON esetén hasznos – de OFF-nál hiányozhat → optional
+      ["svg.ad-board-svg",      "Board marker svg.ad-board-svg",            false],
       ];
 
-      for (const [sel, label] of checks) {
-        const ok = !!document.querySelector(sel);
-        const pill = makePill(ok ? L.diagOk : L.diagMissing, ok ? "ok" : "danger");
-        box.appendChild(mkRow(label, pill, compact));
-      }
+    for (const [sel, label, required] of checks) {
+      const ok = !!document.querySelector(sel);
+
+      let text, level;
+      if (ok) {
+      text = L.diagOk; level = "ok";
+      } else if (required) {
+        text = L.diagMissing; level = "danger";
+        } else {
+          text = L.diagOptional; level = "warn";
+          }
+
+      const pill = makePill(text, level);
+      box.appendChild(mkRow(label, pill, compact));
+    }
 
       break;
     }
