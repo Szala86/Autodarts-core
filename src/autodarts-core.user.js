@@ -2,7 +2,7 @@
 // @name         Autodarts – CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
-// @version      2.5.4
+// @version      2.6.0
 // @match        https://play.autodarts.io/*
 // @run-at       document-start
 // @grant        none
@@ -17,7 +17,7 @@
 (() => {
   "use strict";
 
-  const SCRIPT_VERSION = "2.5.4";
+  const SCRIPT_VERSION = "2.6.0";
 
   /* ================== STORAGE ================== */
   const STORE_KEY_STATE = "ad_core_state";
@@ -47,8 +47,10 @@
     BM_BACK_BUTTON: true,
 
     // NEW: integrated Stylebot CSS as toggleable module
-    SKIN_CSS: true,
+    SKIN_ENABLED: true,
+    LAYOUT_ENABLED: true,
     SKIN_AUTO_DISABLE_ON_MISMATCH: true,
+    SKIN_OVERLAY_HEX: "#081a28",
 
         // Skin / Layout adjustable
     SKIN_UI_SCALE: 1,
@@ -99,7 +101,6 @@
     CHECKOUT_COLOR_HEX: "#ffffff",
     CHECKOUT_OPACITY: 0.55,
 
-    TRIPLE_SHIMMER_MS: 2000,
     TRIPLE_SLAM_MS: 350,
     TRIPLE_RATTLE_MS: 500,
     TRIPLE_RATTLE_DELAY_MS: 275,
@@ -180,7 +181,7 @@
       diagOptional: "OPCIONÁLIS",
       tab: {
         general:  "Általános",
-        skin:     "Skin / Layout",
+        skin:     "Skin",
         board:    "Eszköz – Board marker",
         bmback:   "Eszköz – Vissza gomb (/boards)",
         throws:   "Megjelenítés – Dobáspontok",
@@ -192,6 +193,7 @@
         win:      "Hang – Győzelem",
         clock:    "Widget – Óra",
         diag: "Diagnosztika",
+        layout: "Elrendezés",
       },
       fields: {
         bg: "Háttér",
@@ -203,7 +205,6 @@
         opacity: "Áttetszőség",
         outline: "Keret vastagság",
         glow: "Glow erősség",
-        highlightSpeed: "Highlight sebesség",
         numberAnim: "Szám animáció",
         rattleDur: "Rázkódás idő",
         rattleDelay: "Rázkódás késleltetés",
@@ -218,6 +219,7 @@
         bgUrl: "Háttérkép URL",
         overlay: "Overlay áttetszőség",
         autoDisable: "Auto kikapcsolás, ha frissítés után elcsúszik (ajánlott)",
+        overlayColor: "Overlay szín",
       },
       clockText: {
         enabled: "Óra engedélyezése",
@@ -268,6 +270,10 @@
         skinWarn: "Skin: Autodarts frissült? (CSS szelektor eltérés gyanú) – lehet, hogy frissíteni kell a Skin CSS-t.",
         lang: "Nyelv frissítve ✓",
         skinAutoOff: "Skin AUTO-OFF (selector eltérés) ✓",
+        layoutOn: "Layout ON ✓",
+        layoutOff: "Layout OFF",
+        layoutWarn: "Layout: Autodarts frissült? (CSS szelektor eltérés gyanú) – lehet, hogy frissíteni kell a Layout CSS-t.",
+        layoutAutoOff: "Layout AUTO-OFF (selector eltérés) ✓",
       }
     },
 
@@ -305,7 +311,7 @@
       diagOptional: "OPTIONAL",
       tab: {
         general:  "General",
-        skin:     "Skin / Layout",
+        skin:     "Skin",
         board:    "Utility – Board Marker",
         bmback:   "Utility – Back Button (/boards)",
         throws:   "Display – Throw Points",
@@ -317,6 +323,7 @@
         win:      "Sound – Win",
         clock:    "Widget – Clock",
         diag: "Diagnostics",
+        layout: "Layout",
       },
       fields: {
         bg: "Background",
@@ -328,7 +335,6 @@
         opacity: "Opacity",
         outline: "Outline size",
         glow: "Glow strength",
-        highlightSpeed: "Highlight speed",
         numberAnim: "Number animation",
         rattleDur: "Rattle duration",
         rattleDelay: "Rattle delay",
@@ -343,6 +349,7 @@
         bgUrl: "Background image URL",
         overlay: "Overlay opacity",
         autoDisable: "Auto-disable if selectors mismatch after update (recommended)",
+        overlayColor: "Overlay color",
       },
       clockText: {
         enabled: "Enable clock",
@@ -393,6 +400,10 @@
         skinWarn: "Skin: Autodarts update? (selector mismatch) – the Skin CSS selectors may need an update.",
         lang: "Language updated ✓",
         skinAutoOff: "Skin AUTO-OFF (selector mismatch) ✓",
+        layoutOn: "Layout ON ✓",
+        layoutOff: "Layout OFF",
+        layoutWarn: "Layout: Autodarts updated? (selector mismatch) – the Layout CSS selectors may need an update.",
+        layoutAutoOff: "Layout AUTO-OFF (selector mismatch) ✓",
       }
     },
 
@@ -430,7 +441,7 @@
       diagOptional: "OPTIONAL",
       tab: {
         general:  "Allgemein",
-        skin:     "Skin / Layout",
+        skin:     "Skin",
         board:    "Werkzeug – Board Marker",
         bmback:   "Werkzeug – Zurück-Button (/boards)",
         throws:   "Anzeige – Wurfpunkte",
@@ -442,6 +453,7 @@
         win:      "Sound – Sieg",
         clock:    "Widget – Uhr",
         diag: "Diagnose",
+        layout: "Layout",
       },
       fields: {
         bg: "Hintergrund",
@@ -453,7 +465,6 @@
         opacity: "Transparenz",
         outline: "Rahmenstärke",
         glow: "Glow Stärke",
-        highlightSpeed: "Highlight Speed",
         numberAnim: "Zahlenanimation",
         rattleDur: "Wackeln Dauer",
         rattleDelay: "Wackeln Verzögerung",
@@ -468,6 +479,7 @@
         bgUrl: "Hintergrundbild URL",
         overlay: "Overlay-Transparenz",
         autoDisable: "Auto-Deaktivieren bei Selektor-Mismatch nach Update (empfohlen)",
+        overlayColor: "Overlay-Farbe",
       },
       clockText: {
         enabled: "Uhr aktivieren",
@@ -518,6 +530,10 @@
         skinWarn: "Skin: Autodarts Update? (Selektor passt nicht) – ggf. Skin-CSS-Selektoren aktualisieren.",
         lang: "Sprache aktualisiert ✓",
         skinAutoOff: "Skin AUTO-AUS (Selektor-Mismatch) ✓",
+        layoutOn: "Layout AN ✓",
+        layoutOff: "Layout AUS",
+        layoutWarn: "Layout: Autodarts aktualisiert? (Selektor-Mismatch) – die Layout-CSS-Selektoren müssen evtl. angepasst werden.",
+        layoutAutoOff: "Layout AUTO-AUS (Selektor-Mismatch) ✓",
       }
     }
   };
@@ -590,7 +606,7 @@
     const obs = new MutationObserver(() => { if (document.body) { obs.disconnect(); cb(); } });
     obs.observe(document.documentElement, { childList: true, subtree: true });
   }
-  
+
   function matchHotkey(e, def) {
     if (!def) return false;
     if (!!def.shift !== e.shiftKey) return false;
@@ -662,9 +678,22 @@
     out.ui.clock = { ...clone(DEFAULT_CLOCK), ...(st?.ui?.clock || {}) };
     out.ui.lang = (out.ui.lang === "en" || out.ui.lang === "de") ? out.ui.lang : "hu";
 
-    out.presets = (Array.isArray(st?.presets) && st.presets.length === 3)
-      ? st.presets.map(p => ({ ...clone(DEFAULT_CFG), ...(p || {}) }))
-      : [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)];
+out.presets = (Array.isArray(st?.presets) && st.presets.length === 3)
+  ? st.presets.map(p => {
+      const merged = { ...clone(DEFAULT_CFG), ...(p || {}) };
+
+      if (p && Object.prototype.hasOwnProperty.call(p, "SKIN_CSS")) {
+        if (!Object.prototype.hasOwnProperty.call(p, "SKIN_ENABLED")) {
+          merged.SKIN_ENABLED = !!p.SKIN_CSS;
+        }
+        if (!Object.prototype.hasOwnProperty.call(p, "LAYOUT_ENABLED")) {
+          merged.LAYOUT_ENABLED = !!p.SKIN_CSS;
+        }
+      }
+
+      return merged;
+    })
+  : [clone(DEFAULT_CFG), clone(DEFAULT_CFG), clone(DEFAULT_CFG)];
 
     out.schemaVersion = STATE_SCHEMA_VERSION;
     return out;
@@ -699,11 +728,11 @@
   state.schemaVersion = STATE_SCHEMA_VERSION;
   const cfg = () => state.presets[state.activePreset];
 
-  function saveStateNow(){ 
-    try { 
+  function saveStateNow(){
+    try {
       state.schemaVersion = STATE_SCHEMA_VERSION;
-      localStorage.setItem(STORE_KEY_STATE, JSON.stringify(state)); 
-    } catch {} 
+      localStorage.setItem(STORE_KEY_STATE, JSON.stringify(state));
+    } catch {}
   }
   let saveTimer = null;
   function saveStateDebounced() {
@@ -888,7 +917,6 @@
   --ad-checkout-rgb: ${chkRGB};
   --ad-checkout-op: ${clamp(+c.CHECKOUT_OPACITY ?? 0.55, 0, 1)};
 
-  --ad-triple-shimmer-ms: ${clamp(+c.TRIPLE_SHIMMER_MS || 2000, 400, 6000)}ms;
   --ad-triple-slam-ms: ${clamp(+c.TRIPLE_SLAM_MS || 350, 80, 1200)}ms;
   --ad-triple-rattle-ms: ${clamp(+c.TRIPLE_RATTLE_MS || 500, 80, 2000)}ms;
   --ad-triple-rattle-delay-ms: ${clamp(+c.TRIPLE_RATTLE_DELAY_MS || 0, 0, 2500)}ms;
@@ -919,6 +947,73 @@
   width:100% !important;
   height:100% !important;
   pointer-events:none !important;
+}
+`);
+
+      css.push(`
+/* =========================================================
+   180 / fireworks – egyetlen közös fix
+   ========================================================= */
+
+#ad-ext-player-display > div{
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+#ad-ext-player-display > div > .fireworks{
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  background: transparent !important;
+  z-index: 100 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#ad-ext-player-display > div > .fireworks > div{
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  border-radius: inherit !important;
+  z-index: 0 !important;
+}
+
+#ad-ext-player-display > div > .fireworks canvas{
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  background: transparent !important;
+  border-radius: inherit !important;
+}
+
+#ad-ext-player-display > div > .fireworks .animate180Text{
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  inset: auto !important;
+  margin: 0 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  z-index: 101 !important;
+
+  font-size: clamp(90px, 12vw, 140px) !important;
+}
+
+/* player content maradjon a fireworks fölött */
+#ad-ext-player-display > div > .ad-ext-player,
+#ad-ext-player-display > div > .css-17xejub,
+#ad-ext-player-display > div > .css-1qox1u6{
+  position: relative !important;
+  z-index: 1 !important;
 }
 `);
 
@@ -1053,8 +1148,8 @@
 `);
       }
 
-      if (c.CHECKOUT_VIEW) {
-        css.push(`
+if (c.CHECKOUT_VIEW) {
+  css.push(`
 .ad-ext-turn-checkout-value,
 .ad-ext-turn-checkout-value *{
   font-family:'Barlow Condensed', system-ui, sans-serif !important;
@@ -1066,28 +1161,26 @@
   text-shadow:none !important;
 }
 `);
-      }
+}
 
-      if (c.TRIPLE_ANIM) {
-        css.push(`
-.${TRIPLE_CLASS}{
-  -webkit-mask: linear-gradient(-60deg,#000 30%,#0005,#000 70%) left/300% 100%;
-  background-repeat:no-repeat;
+if (c.TRIPLE_ANIM) {
+  css.push(`
+#ad-ext-turn .ad-ext-turn-throw.${TRIPLE_CLASS}{
   animation:
-    adShimmer var(--ad-triple-shimmer-ms) linear 0ms infinite,
-    adRattle  var(--ad-triple-rattle-ms) ease-out var(--ad-triple-rattle-delay-ms) 1;
-  overflow:visible;
+    adRattle var(--ad-triple-rattle-ms) ease-out var(--ad-triple-rattle-delay-ms) 1 !important;
 }
-.${TRIPLE_CLASS} p{
-  animation: adSlam var(--ad-triple-slam-ms) ease-in 1;
-  font-weight:900 !important;
+
+#ad-ext-turn .ad-ext-turn-throw.${TRIPLE_CLASS} p{
+  animation: adSlam var(--ad-triple-slam-ms) ease-in 1 !important;
+  font-weight: 900 !important;
 }
-@keyframes adShimmer { 100% { -webkit-mask-position:right; } }
+
 @keyframes adSlam {
   0%   { transform: scale(10,10); opacity:0; }
   40%  { opacity:0; }
   100% { transform: scale(1,1); opacity:1; }
 }
+
 @keyframes adRattle {
   0% { margin-top:0; margin-left:0; }
   10% { margin-top:-5px; margin-left:0; }
@@ -1102,31 +1195,28 @@
   100% { margin-top:0; margin-left:0; }
 }
 `);
-      }
+}
 
-      style.textContent = css.join("\n");
+style.textContent = css.join("\n");
     });
   }
 
   /* ================== SKIN / STYLEBOT CSS (INTEGRATED) ================== */
   // ✅ ide került 1:1-ben a Stylebot CSS-ed
-  const EXTRA_CSS = String.raw`
+  const LAYOUT_CSS = String.raw`
 :root{
   --ad-ui-scale: 1;
 }
 
-:root:has(#ad-ext-turn){
-  overflow: hidden !important;
-}
-
-:root:has(#ad-ext-turn) body{
+:root:has(#ad-ext-turn),
+:root:has(#ad-ext-turn) body,
+:root:has(#ad-ext-turn) #root{
   overflow: hidden !important;
 }
 
 :root:has(#ad-ext-turn) #root{
   width:  calc(100vw / var(--ad-ui-scale)) !important;
   height: calc(100vh / var(--ad-ui-scale)) !important;
-
   transform: scale(var(--ad-ui-scale)) !important;
   transform-origin: top left !important;
   will-change: transform;
@@ -1134,146 +1224,148 @@
 
 :root {
   --spacing-player: 20px;
+  --ad-player-top: 95px;
+  --ad-player-bottom: 95px;
+  --ad-player-side: 60px;
 }
 
 /* =========================================================
-   1–2 játékos:
+   1–2 játékos
    ========================================================= */
 
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(1):only-child {
-  top: 95px;
-  left: 60px;
-  height: calc(100% - 100px);
+:root #ad-ext-player-display > div:nth-child(1):only-child,
+:root #ad-ext-player-display > div:nth-child(1):nth-last-child(2) {
+  top: var(--ad-player-top);
+  left: var(--ad-player-side);
+  height: calc(100% - var(--ad-player-top) - var(--ad-player-bottom));
 }
 
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(1):nth-last-child(2) {
-  top: 95px;
-  left: 60px;
-  height: calc(100% - 100px);
-}
-
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(2):nth-last-child(1) {
-  top: 95px;
-  right: 60px;
-  height: calc(100% - 100px);
+:root #ad-ext-player-display > div:nth-child(2):nth-last-child(1) {
+  top: var(--ad-player-top);
+  right: var(--ad-player-side);
+  height: calc(100% - var(--ad-player-top) - var(--ad-player-bottom));
 }
 
 /* Név pozíció 1–2 játékosnál */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display:has(> div:nth-child(2):nth-last-child(1)) .css-y3hfdd,
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display:has(> div:only-child) .css-y3hfdd {
+:root #ad-ext-player-display:has(> div:nth-child(2):nth-last-child(1)) .css-y3hfdd,
+:root #ad-ext-player-display:has(> div:only-child) .css-y3hfdd {
   position: absolute;
-  top: 14em; /* szabadon állítható */
+  top: 14em;
 }
 
 /* =========================================================
-   3–4 játékos:
-   ========================================================= */
-
-/* 1 (fent bal) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(1):nth-last-child(3),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(1):nth-last-child(4) {
-  top: 95px;
-  left: 60px;
-  height: calc((105% - 180px) / 2 - var(--spacing-player));
-}
-
-/* 2 (fent jobb) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(2):nth-last-child(2),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(2):nth-last-child(3) {
-  top: 95px;
-  right: 60px;
-  height: calc((105% - 180px) / 2 - var(--spacing-player));
-}
-
-/* 3 (lent bal) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(3):nth-last-child(1),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(3):nth-last-child(2) {
-  top: calc(95px + ((100% - 180px) / 2) + var(--spacing-player));
-  left: 60px;
-  height: calc((105% - 180px) / 2 - var(--spacing-player));
-}
-
-/* 4 (lent jobb) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(4):last-child {
-  top: calc(95px + ((100% - 180px) / 2) + var(--spacing-player));
-  right: 60px;
-  height: calc((105% - 180px) / 2 - var(--spacing-player));
-}
-
-/* Név pozíció 3–4 játékosnál */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display:has(> div:nth-child(3):nth-last-child(2)) .css-y3hfdd,
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display:has(> div:nth-child(4):last-child) .css-y3hfdd {
-  position: absolute;
-  top: 7em; /* szabadon állítható */
-}
-
-/* =========================================================
-   5–6 játékos:
+   3–4 játékos
    ========================================================= */
 
 :root {
-  --row-height-3: calc((108% - 180px) / 3 - var(--spacing-player));
+  --row-height-2: calc((100% - var(--ad-player-top) - var(--ad-player-bottom) - var(--spacing-player)) / 2);
 }
 
 /* 1 (fent bal) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(1):nth-last-child(5),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(1):nth-last-child(6) {
-  top: 95px;
-  left: 60px;
+:root #ad-ext-player-display > div:nth-child(1):nth-last-child(3),
+:root #ad-ext-player-display > div:nth-child(1):nth-last-child(4) {
+  top: var(--ad-player-top);
+  left: var(--ad-player-side);
+  height: var(--row-height-2);
+}
+
+/* 2 (fent jobb) */
+:root #ad-ext-player-display > div:nth-child(2):nth-last-child(2),
+:root #ad-ext-player-display > div:nth-child(2):nth-last-child(3) {
+  top: var(--ad-player-top);
+  right: var(--ad-player-side);
+  height: var(--row-height-2);
+}
+
+/* 3 (lent bal) */
+:root #ad-ext-player-display > div:nth-child(3):nth-last-child(1),
+:root #ad-ext-player-display > div:nth-child(3):nth-last-child(2) {
+  top: calc(var(--ad-player-top) + var(--row-height-2) + var(--spacing-player));
+  left: var(--ad-player-side);
+  height: var(--row-height-2);
+}
+
+/* 4 (lent jobb) */
+:root #ad-ext-player-display > div:nth-child(4):last-child {
+  top: calc(var(--ad-player-top) + var(--row-height-2) + var(--spacing-player));
+  right: var(--ad-player-side);
+  height: var(--row-height-2);
+}
+
+/* Név pozíció 3–4 játékosnál */
+:root #ad-ext-player-display:has(> div:nth-child(3):nth-last-child(2)) .css-y3hfdd,
+:root #ad-ext-player-display:has(> div:nth-child(4):last-child) .css-y3hfdd {
+  position: absolute;
+  top: 7em;
+}
+
+/* =========================================================
+   5–6 játékos
+   ========================================================= */
+
+:root {
+  --row-height-3: calc((100% - var(--ad-player-top) - var(--ad-player-bottom) - (var(--spacing-player) * 2)) / 3);
+}
+
+/* 1 (fent bal) */
+:root #ad-ext-player-display > div:nth-child(1):nth-last-child(5),
+:root #ad-ext-player-display > div:nth-child(1):nth-last-child(6) {
+  top: var(--ad-player-top);
+  left: var(--ad-player-side);
   height: var(--row-height-3);
 }
 
 /* 2 (fent jobb) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(2):nth-last-child(4),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(2):nth-last-child(5) {
-  top: 95px;
-  right: 60px;
+:root #ad-ext-player-display > div:nth-child(2):nth-last-child(4),
+:root #ad-ext-player-display > div:nth-child(2):nth-last-child(5) {
+  top: var(--ad-player-top);
+  right: var(--ad-player-side);
   height: var(--row-height-3);
 }
 
 /* 3 (közép bal) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(3):nth-last-child(3),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(3):nth-last-child(4) {
-  top: calc(95px + ((100% - 180px) / 3) + var(--spacing-player));
-  left: 60px;
+:root #ad-ext-player-display > div:nth-child(3):nth-last-child(3),
+:root #ad-ext-player-display > div:nth-child(3):nth-last-child(4) {
+  top: calc(var(--ad-player-top) + var(--row-height-3) + var(--spacing-player));
+  left: var(--ad-player-side);
   height: var(--row-height-3);
 }
 
 /* 4 (közép jobb) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(4):nth-last-child(2),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(4):nth-last-child(3) {
-  top: calc(95px + ((100% - 180px) / 3) + var(--spacing-player));
-  right: 60px;
+:root #ad-ext-player-display > div:nth-child(4):nth-last-child(2),
+:root #ad-ext-player-display > div:nth-child(4):nth-last-child(3) {
+  top: calc(var(--ad-player-top) + var(--row-height-3) + var(--spacing-player));
+  right: var(--ad-player-side);
   height: var(--row-height-3);
 }
 
 /* 5 (lent bal) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(5):nth-last-child(1),
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(5):nth-last-child(2) {
-  top: calc(95px + 2 * ((100% - 180px) / 3) + 2 * var(--spacing-player));
-  left: 60px;
+:root #ad-ext-player-display > div:nth-child(5):nth-last-child(1),
+:root #ad-ext-player-display > div:nth-child(5):nth-last-child(2) {
+  top: calc(var(--ad-player-top) + var(--row-height-3) + var(--spacing-player) + var(--row-height-3) + var(--spacing-player));
+  left: var(--ad-player-side);
   height: var(--row-height-3);
 }
 
 /* 6 (lent jobb) */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div:nth-child(6):last-child {
-  top: calc(95px + 2 * ((100% - 180px) / 3) + 2 * var(--spacing-player));
-  right: 60px;
+:root #ad-ext-player-display > div:nth-child(6):last-child {
+  top: calc(var(--ad-player-top) + var(--row-height-3) + var(--spacing-player) + var(--row-height-3) + var(--spacing-player));
+  right: var(--ad-player-side);
   height: var(--row-height-3);
 }
 
 /* Név pozíció 5–6 játékosnál */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display:has(> div:nth-child(5):nth-last-child(1)) .css-y3hfdd,
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display:has(> div:nth-child(6):last-child) .css-y3hfdd {
+:root #ad-ext-player-display:has(> div:nth-child(5):nth-last-child(1)) .css-y3hfdd,
+:root #ad-ext-player-display:has(> div:nth-child(6):last-child) .css-y3hfdd {
   position: absolute;
-  top: 2em; /* szabadon állítható */
+  top: 2em;
 }
 
 /* =========================================================
    Hover / kattintás vizuál.
    ========================================================= */
 
-:root:not(:has(.css-rc3vw3)) #ad-ext-turn .ad-ext-turn-throw:hover {
+:root #ad-ext-turn .ad-ext-turn-throw:hover {
   box-shadow: var(--color-shadow-strong);
   transform: scale(1.03);
   cursor: pointer;
@@ -1283,38 +1375,34 @@
    Konténerek / méretek
    ========================================================= */
 
-:root:not(:has(.css-rc3vw3)) .css-tkevr6 {
-  position: relative;
-  width: 100%;
-  height: 95%;
-  box-sizing: border-box;
+/* Player display teljes képernyős overlay legyen,
+   így a kártyák a viewporthoz igazodnak */
+:root #ad-ext-player-display{
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  pointer-events: none !important;
 }
 
-/* Player box szélesség */
-:root:not(:has(.css-rc3vw3)) #ad-ext-player-display > div {
-  position: absolute;
-  width: 411px;
+:root #ad-ext-player-display > div {
+  position: absolute !important;
+  width: 411px !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  isolation: isolate !important;
 }
 
 /* Scoring + Bullout teljes szélesség */
-:root:not(:has(.css-rc3vw3)) .css-1omnor5,
-:root:not(:has(.css-rc3vw3)) .css-ul22ge {
+:root .css-1omnor5,
+:root .css-ul22ge {
   width: 900px;
 }
 
-/* Scoring elemek magasság */
-:root:not(:has(.css-rc3vw3)) .css-1dkgpmk,
-:root:not(:has(.css-rc3vw3)) .css-1wlduvp,
-:root:not(:has(.css-rc3vw3)) .css-sm8wdq,
-:root:not(:has(.css-rc3vw3)) .css-881tme,
-:root:not(:has(.css-rc3vw3)) #ad-ext-turn .css-rrf7rv,
-:root:not(:has(.css-rc3vw3)) #ad-ext-turn .score.css-156dsds,
-:root:not(:has(.css-rc3vw3)) #ad-ext-turn .ad-ext-turn-throw.css-1p5spmi {
-  height: 110px;
-}
-
 /* Menüsáv teljes szélesség */
-:root:not(:has(.css-rc3vw3)) .css-19lo6pj {
+:root .css-19lo6pj {
   width: 150%;
 }
 
@@ -1339,18 +1427,18 @@
    Scoring + board pozíció
    ========================================================= */
 
-:root:not(:has(.css-rc3vw3)):root:not(:has(.css-7lnr9n)):root:not(:has(.css-15suq9)) .css-1emway5,
-:root:not(:has(.css-rc3vw3)):root:not(:has(.css-15suq9)) .css-jbngkd,
-:root:not(:has(.css-rc3vw3)) .css-1cdcn26 {
-  position: relative;
-  top: 1em;
+:root:not(:has(.css-7lnr9n)):root:not(:has(.css-15suq9)) .css-1emway5,
+:root:not(:has(.css-15suq9)) .css-jbngkd,
+:root .css-1cdcn26 {
+  position: relative !important;
+  top: 0 !important;
 }
 
 /* =========================================================
    Avatar: méret + pozíció (1v1)
    ========================================================= */
 
-:root:not(:has(.css-rc3vw3)):root:has(.css-1cdcn26):root:not(:has(#ad-ext-player-display > div:nth-child(3))) div.chakra-stack.css-1psdi5l {
+:root:has(.css-1cdcn26):root:not(:has(#ad-ext-player-display > div:nth-child(3))) div.chakra-stack.css-1psdi5l {
   position: absolute;
   top: -180px;
   left: 50%;
@@ -1358,11 +1446,29 @@
   scale: 7;
 }
 
-:root:not(:has(.css-rc3vw3)):root:has(.css-1cdcn26):root:not(:has(#ad-ext-player-display > div:nth-child(3))) img.chakra-image.css-6t0bzd {
+:root:has(.css-1cdcn26):root:not(:has(#ad-ext-player-display > div:nth-child(3))) img.chakra-image.css-6t0bzd {
   scale: 0.5;
 }
 
-/* =========================================================
+
+`;
+
+  const SKIN_STATIC_CSS = String.raw`
+
+  /* Scoring elemek magasság – layout OFF esetén is maradjon */
+:root .css-1dkgpmk,
+:root .css-1wlduvp,
+:root .css-sm8wdq,
+:root .css-881tme,
+:root #ad-ext-turn .css-rrf7rv,
+:root #ad-ext-turn .score.css-156dsds,
+:root #ad-ext-turn .ad-ext-turn-throw,
+:root #ad-ext-turn .ad-ext-turn-throw.css-1p5spmi {
+  min-height: 110px !important;
+  height: 110px !important;
+}
+
+  /* =========================================================
    BOARD – Winmau/BladeX look + szürke keret
    ========================================================= */
 
@@ -1453,7 +1559,7 @@ svg.ad-board-svg text{
 
   function runSkinHealthCheck() {
     const c = cfg();
-    if (!c || !c.SKIN_CSS) return;
+    if (!c || !c.LAYOUT_ENABLED) return;
     if (!location.pathname.startsWith("/matches/")) return;
 
     const turn = document.querySelector("#ad-ext-turn");
@@ -1479,19 +1585,19 @@ svg.ad-board-svg text{
 
     console.warn("[AD-CORE] Skin health-check: likely selector mismatch after update.");
     const L = T();
-    const msg = (L && L.toasts && L.toasts.skinWarn) ? L.toasts.skinWarn : "Skin: selector mismatch";
+    const msg = (L && L.toasts && L.toasts.layoutWarn) ? L.toasts.layoutWarn : "Layout: selector mismatch";
     if (typeof showToast === "function") showToast(msg);
 
     // optional auto-disable
     if (c.SKIN_AUTO_DISABLE_ON_MISMATCH) {
-      c.SKIN_CSS = false;
+      c.LAYOUT_ENABLED = false;
       dirtySkin();
       saveStateDebounced();
       scheduleUpdate();
 
       const L2 = T();
       if (typeof showToast === "function") {
-        showToast(L2?.toasts?.skinAutoOff || "Skin AUTO-OFF");
+        showToast(L2?.toasts?.layoutAutoOff || "Layout AUTO-OFF");
       }
     }
   }
@@ -1507,10 +1613,12 @@ svg.ad-board-svg text{
   function ensureSkinCss() {
     ensureHead(() => {
       const c = cfg();
-      const on = !!c.SKIN_CSS;
+      const skinOn = !!c.SKIN_ENABLED;
+      const layoutOn = !!c.LAYOUT_ENABLED;
+
 
       let st = document.getElementById(EXTRA_STYLE_ID);
-      if (!on) {
+      if (!skinOn && !layoutOn) {
         if (st) st.remove();
         return;
       }
@@ -1520,23 +1628,30 @@ svg.ad-board-svg text{
         st.id = EXTRA_STYLE_ID;
       }
 
-      const scale = clamp(Number(c.SKIN_UI_SCALE ?? 1), 0.85, 1.15);
-      const spacing = clamp(Number(c.SKIN_SPACING_PLAYER ?? 20), 0, 80);
-      const alpha = clamp(Number(c.SKIN_BG_OVERLAY_ALPHA ?? 0.55), 0, 1);
-      const url = sanitizeUrl(c.SKIN_BG_URL, DEFAULT_CFG.SKIN_BG_URL);
-      const pbgRGB = hexToRgbString(sanitizeHex(c.SKIN_PLAYER_BG_HEX, DEFAULT_CFG.SKIN_PLAYER_BG_HEX));
-      const pbgOp  = clamp(Number(c.SKIN_PLAYER_BG_OPACITY ?? DEFAULT_CFG.SKIN_PLAYER_BG_OPACITY), 0, 1);
-      const dyn = String.raw`
+const scale = clamp(Number(c.SKIN_UI_SCALE ?? 1), 0.85, 1.15);
+const spacing = clamp(Number(c.SKIN_SPACING_PLAYER ?? 20), 0, 80);
+const alpha = clamp(Number(c.SKIN_BG_OVERLAY_ALPHA ?? 0.55), 0, 1);
+const url = sanitizeUrl(c.SKIN_BG_URL, DEFAULT_CFG.SKIN_BG_URL);
+const overlayRgb = hexToRgbString(sanitizeHex(c.SKIN_OVERLAY_HEX, "#081a28"));
+const pbgRGB = hexToRgbString(sanitizeHex(c.SKIN_PLAYER_BG_HEX, DEFAULT_CFG.SKIN_PLAYER_BG_HEX));
+const pbgOp  = clamp(Number(c.SKIN_PLAYER_BG_OPACITY ?? DEFAULT_CFG.SKIN_PLAYER_BG_OPACITY), 0, 1);
+
+const dynLayout = layoutOn ? String.raw`
 :root{
   --ad-ui-scale: ${scale};
   --spacing-player: ${spacing}px;
+}
+` : "";
+
+const dynSkin = skinOn ? String.raw`
+:root{
+  --ad-bg-overlay-rgb: ${overlayRgb};
   --ad-bg-overlay-alpha: ${alpha};
   --ad-bg-url: url("${cssUrl(url)}");
   --ad-player-bg-rgb: ${pbgRGB};
   --ad-player-bg-op: ${pbgOp};
 }
 
-/* override background-image to use the editable URL + overlay alpha */
 :root:has(.css-1cdcn26) body,
 :root:has(.css-1cdcn26) #root,
 :root:has(.css-1cdcn26) .css-z42oq0,
@@ -1545,12 +1660,39 @@ svg.ad-board-svg text{
 :root:not(:has(.css-1cdcn26)) #root,
 :root:not(:has(.css-1cdcn26)) .css-z42oq0,
 :root:not(:has(.css-1cdcn26)) .css-nfhdnc {
+  background-color: rgb(var(--ad-bg-overlay-rgb)) !important;
   background-image:
-    linear-gradient(rgba(8,26,40,var(--ad-bg-overlay-alpha)), rgba(8,26,40,var(--ad-bg-overlay-alpha))),
+    linear-gradient(rgba(var(--ad-bg-overlay-rgb), var(--ad-bg-overlay-alpha)), rgba(var(--ad-bg-overlay-rgb), var(--ad-bg-overlay-alpha))),
     var(--ad-bg-url) !important;
+  background-repeat: no-repeat !important;
+  background-position: center bottom !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
 }
 
-/* IMPORTANT: keep CORE adjustable card backgrounds even when Skin CSS is ON */
+/* player háttér */
+#ad-ext-player-display > div::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(var(--ad-player-bg-rgb), var(--ad-player-bg-op));
+  z-index: 0;
+  opacity: 1;
+  transition: opacity .12s ease;
+}
+
+#ad-ext-player-display > div > *{
+  position: relative;
+  z-index: 1;
+}
+
+#ad-ext-player-display > div.ad-native-state-bg::before{
+  opacity: 0 !important;
+}
+
+/* throw card override megmarad */
 #ad-ext-turn .ad-ext-turn-throw.ad-has-throw{
   background-color: rgba(var(--ad-throw-bg-rgb), var(--ad-throw-bg-op)) !important;
   background-image: none !important;
@@ -1559,21 +1701,16 @@ svg.ad-board-svg text{
   background-color: rgba(var(--ad-throw-hover-bg-rgb), var(--ad-throw-hover-bg-op)) !important;
   background-image: none !important;
 }
-
-/* ✅ STICKY SELECT: Skin CSS mellett is maradjon hover szín */
 #ad-ext-turn .ad-ext-turn-throw.ad-click-selected,
 #ad-ext-turn .ad-ext-turn-throw.ad-click-selected:hover{
   background-color: rgba(var(--ad-throw-hover-bg-rgb), var(--ad-throw-hover-bg-op)) !important;
   background-image: none !important;
 }
+` : "";
 
-/* Player panelek háttér (Skin/Layout) */
-#ad-ext-player-display > div{
-  background-color: rgba(var(--ad-player-bg-rgb), var(--ad-player-bg-op)) !important;
-}
-`;
-
-      st.textContent = EXTRA_CSS + "\n" + dyn;
+      st.textContent =
+  (skinOn ? (SKIN_STATIC_CSS + "\n" + dynSkin) : "") +
+  (layoutOn ? (LAYOUT_CSS + "\n" + dynLayout) : "");
 
       const core = document.getElementById(STYLE_ID);
       if (core && core.parentNode) {
@@ -1600,16 +1737,19 @@ svg.ad-board-svg text{
     return has20Text || (looksSquareVB && pathCount > 120);
   }
 
-  function applyBoardMarkerNow() {
-    const c = cfg();
-    const svgs = document.querySelectorAll("svg");
-    for (const svg of svgs) {
-      const isBoard = isBoardSvg(svg);
-      const has = svg.classList.contains("ad-board-svg");
-      if (c.BOARD_MARKER) { if (isBoard && !has) svg.classList.add("ad-board-svg"); }
-      else { if (has) svg.classList.remove("ad-board-svg"); }
+function applyBoardMarkerNow() {
+  const c = cfg();
+  const svgs = document.querySelectorAll("svg");
+  for (const svg of svgs) {
+    const isBoard = isBoardSvg(svg);
+    const has = svg.classList.contains("ad-board-svg");
+    if (c.BOARD_MARKER) {
+      if (isBoard && !has) svg.classList.add("ad-board-svg");
+    } else {
+      if (has) svg.classList.remove("ad-board-svg");
     }
   }
+}
 
   let boardMarkScheduled = false;
   function scheduleBoardMark() {
@@ -1853,6 +1993,19 @@ function applyStickyThrowSelection(turn){
     root.querySelectorAll(".ad-total-cell").forEach(el => el.classList.remove("ad-total-cell"));
   }
 
+  function unhideTotalLeaf(el) {
+    if (!el) return;
+      el.removeAttribute("data-ad-total-hidden");
+      el.style.position = "";
+      el.style.left = "";
+      el.style.top = "";
+      el.style.width = "";
+      el.style.height = "";
+      el.style.overflow = "";
+      el.style.opacity = "";
+      el.style.pointerEvents = "";
+  }
+
   function findNumericLeaf(container) {
     if (!container) return null;
     const all = [container, ...container.querySelectorAll("*")];
@@ -1865,52 +2018,106 @@ function applyStickyThrowSelection(turn){
     return null;
   }
 
-  function forceCenterTotalOverlay(turn) {
-    if (!turn) return;
+function forceCenterTotalOverlay(turn) {
+  if (!turn) return;
 
-    const leaf = (() => {
-      const candidates = Array.from(turn.querySelectorAll("p.ad-ext-turn-points, .ad-ext-turn-points"));
-      for (const el of candidates) {
-        const txt = (el.textContent || "").trim();
-        if (/^\d{1,4}$/.test(txt) && !el.closest(".ad-ext-turn-throw")) return el;
+  const hasManagedTotal =
+    !!turn.querySelector(".ad-total-overlay") ||
+    !!turn.querySelector("[data-ad-total-hidden='1']");
+
+  const leaf = (() => {
+    const candidates = Array.from(
+      turn.querySelectorAll("p.ad-ext-turn-points, .ad-ext-turn-points")
+    );
+
+    for (const el of candidates) {
+      const txt = (el.textContent || "").trim();
+      if (
+        /^\d{1,4}$/.test(txt) &&
+        !el.closest(".ad-ext-turn-throw") &&
+        !el.classList.contains("ad-total-overlay")
+      ) {
+        return el;
       }
-      const f = findNumericLeaf(turn);
-      if (f && !f.closest(".ad-ext-turn-throw")) return f;
-      return null;
-    })();
-    if (!leaf) return;
-
-    const value = (leaf.textContent || "").trim();
-    if (!/^\d{1,4}$/.test(value)) return;
-
-    let cell = leaf;
-    while (cell && cell.parentElement && cell.parentElement !== turn) cell = cell.parentElement;
-    if (!cell || cell === turn) return;
-
-    cell.classList.add("ad-total-cell");
-
-    let overlay = cell.querySelector(".ad-total-overlay");
-    if (!overlay) {
-      overlay = document.createElement("div");
-      overlay.className = "ad-total-overlay ad-ext-turn-total-value";
-      cell.appendChild(overlay);
     }
-    if (overlay.textContent !== value) overlay.textContent = value;
-      overlay.classList.remove("ad-ext-turn-checkout-value");
-      overlay.classList.add("ad-ext-turn-total-value");
 
-    if (leaf.dataset.adTotalHidden !== "1") {
-      leaf.dataset.adTotalHidden = "1";
-      leaf.style.position = "absolute";
-      leaf.style.left = "-9999px";
-      leaf.style.top = "-9999px";
-      leaf.style.width = "1px";
-      leaf.style.height = "1px";
-      leaf.style.overflow = "hidden";
-      leaf.style.opacity = "0";
-      leaf.style.pointerEvents = "none";
+    const f = findNumericLeaf(turn);
+    if (
+      f &&
+      !f.closest(".ad-ext-turn-throw") &&
+      !f.classList.contains("ad-total-overlay")
+    ) {
+      return f;
     }
+
+    return null;
+  })();
+
+  // Bust / üres / nem található total -> takarítás, hogy ne ragadjon bent
+  if (!leaf) {
+    if (hasManagedTotal) restoreTotalOverlays(turn);
+    return;
   }
+
+  const value = (leaf.textContent || "").trim();
+  if (!/^\d{1,4}$/.test(value)) {
+    if (hasManagedTotal) restoreTotalOverlays(turn);
+    return;
+  }
+
+  let cell = leaf;
+  while (cell && cell.parentElement && cell.parentElement !== turn) {
+    cell = cell.parentElement;
+  }
+
+  if (!cell || cell === turn) {
+    if (hasManagedTotal) restoreTotalOverlays(turn);
+    return;
+  }
+
+  // Régi hidden leaf-ek visszaállítása, ha már nem ez az aktuális
+  turn.querySelectorAll("[data-ad-total-hidden='1']").forEach(el => {
+    if (el !== leaf) unhideTotalLeaf(el);
+  });
+
+  // Idegen overlay-ek törlése
+  turn.querySelectorAll(".ad-total-overlay").forEach(el => {
+    if (!cell.contains(el)) el.remove();
+  });
+
+  // Régi total-cell class levétele más cellákról
+  turn.querySelectorAll(".ad-total-cell").forEach(el => {
+    if (el !== cell) el.classList.remove("ad-total-cell");
+  });
+
+  cell.classList.add("ad-total-cell");
+
+  let overlay = Array.from(cell.children).find(
+    el => el.classList && el.classList.contains("ad-total-overlay")
+  );
+
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "ad-total-overlay ad-ext-turn-total-value";
+    cell.appendChild(overlay);
+  }
+
+  if (overlay.textContent !== value) overlay.textContent = value;
+  overlay.classList.remove("ad-ext-turn-checkout-value");
+  overlay.classList.add("ad-ext-turn-total-value");
+
+  if (leaf.dataset.adTotalHidden !== "1") {
+    leaf.dataset.adTotalHidden = "1";
+    leaf.style.position = "absolute";
+    leaf.style.left = "-9999px";
+    leaf.style.top = "-9999px";
+    leaf.style.width = "1px";
+    leaf.style.height = "1px";
+    leaf.style.overflow = "hidden";
+    leaf.style.opacity = "0";
+    leaf.style.pointerEvents = "none";
+  }
+}
 
   /* ================== CHECKOUT MARK ================== */
   function isInButton(el) { return !!el.closest?.("button"); }
@@ -2015,52 +2222,82 @@ function markCheckoutInTurnBar(turn) {
     for (const p of panels) p.classList.toggle(ACTIVE_CLASS, hasActive && p === bestPanel);
   }
 
+  function panelHasNativeStateBg(panel) {
+  if (!panel) return false;
+
+  const rgba = parseRGBA(getComputedStyle(panel).backgroundColor);
+  if (!rgba || rgba.a < 0.20) return false;
+
+  const max = Math.max(rgba.r, rgba.g, rgba.b);
+  const min = Math.min(rgba.r, rgba.g, rgba.b);
+  const spread = max - min;
+
+  if (spread < 45) return false;
+
+  const isGreen = (rgba.g >= rgba.r + 28) && (rgba.g >= rgba.b + 20);
+  const isRed   = (rgba.r >= rgba.g + 28) && (rgba.r >= rgba.b + 20);
+
+  return isGreen || isRed;
+}
+
+function updatePlayerStateOverlay() {
+  const host = document.querySelector("#ad-ext-player-display");
+  if (!host) return;
+
+  const panels = Array.from(host.children).filter(n => n && n.nodeType === 1);
+  for (const panel of panels) {
+    panel.classList.toggle("ad-native-state-bg", panelHasNativeStateBg(panel));
+  }
+}
+
   /* ================== TRIPLE ================== */
-  function clearTripleClasses() {
-    document.querySelectorAll(".ad-ext-turn-throw").forEach(card => {
+function clearTripleClasses() {
+  document.querySelectorAll(".ad-ext-turn-throw").forEach(card => {
+    card.classList.remove(TRIPLE_CLASS);
+    if (card.dataset) delete card.dataset.adTripleToken;
+  });
+}
+
+function restartTriple(card) {
+  card.classList.remove(TRIPLE_CLASS);
+  void card.offsetWidth;
+  card.classList.add(TRIPLE_CLASS);
+}
+
+function updateTripleHighlight(turn) {
+  const c = cfg();
+  if (!c.TRIPLE_ANIM || !turn) return;
+
+  const allow = new Set(TRIPLE_VALUES.map(v => String(v).toUpperCase().trim()));
+  const cards = turn.querySelectorAll(".ad-ext-turn-throw");
+
+  for (const card of cards) {
+    const p = card.querySelector("p");
+    const raw = (p?.textContent || "").trim().toUpperCase();
+
+    if (!raw || raw === "..." || raw === "…" || raw.includes("•")) {
       card.classList.remove(TRIPLE_CLASS);
       if (card.dataset) delete card.dataset.adTripleToken;
-    });
-  }
-  function restartTriple(card) {
-    card.classList.remove(TRIPLE_CLASS);
-    void card.offsetWidth;
-    card.classList.add(TRIPLE_CLASS);
-  }
-  function updateTripleHighlight(turn) {
-    const c = cfg();
-    if (!c.TRIPLE_ANIM || !turn) return;
+      continue;
+    }
 
-    const allow = new Set(TRIPLE_VALUES.map(v => String(v).toUpperCase().trim()));
-    const cards = turn.querySelectorAll(".ad-ext-turn-throw");
+    const isTriple = allow.has(raw);
+    const prev = (card.dataset && card.dataset.adTripleToken) ? card.dataset.adTripleToken : "";
 
-    for (const card of cards) {
-      const p = card.querySelector("p");
-      const raw = (p?.textContent || "").trim().toUpperCase();
+    if (!isTriple) {
+      card.classList.remove(TRIPLE_CLASS);
+      if (card.dataset) delete card.dataset.adTripleToken;
+      continue;
+    }
 
-      if (!raw || raw === "..." || raw === "…" || raw.includes("•")) {
-        card.classList.remove(TRIPLE_CLASS);
-        if (card.dataset) delete card.dataset.adTripleToken;
-        continue;
-      }
-
-      const isTriple = allow.has(raw);
-      const prev = (card.dataset && card.dataset.adTripleToken) ? card.dataset.adTripleToken : "";
-
-      if (!isTriple) {
-        card.classList.remove(TRIPLE_CLASS);
-        if (card.dataset) delete card.dataset.adTripleToken;
-        continue;
-      }
-
-      if (prev !== raw) {
-        if (card.dataset) card.dataset.adTripleToken = raw;
-        restartTriple(card);
-      } else {
-        if (!card.classList.contains(TRIPLE_CLASS)) card.classList.add(TRIPLE_CLASS);
-      }
+    if (prev !== raw) {
+      if (card.dataset) card.dataset.adTripleToken = raw;
+      restartTriple(card);
+    } else {
+      if (!card.classList.contains(TRIPLE_CLASS)) card.classList.add(TRIPLE_CLASS);
     }
   }
+}
 
   /* ================== WIN MUSIC ================== */
 let winAudio = null;
@@ -2405,6 +2642,8 @@ function scanWinMusic() {
     saveStateDebounced();
   }
 
+
+
   /* ================== PERF: DIRTY FLAGS ================== */
   const DIRTY = {
     turn: true,
@@ -2447,10 +2686,14 @@ function scanWinMusic() {
 
       const c = cfg();
 
-      if (c.ACTIVE_PLAYER_HIGHLIGHT && DIRTY.players) {
-        DIRTY.players = false;
-        updateActivePlayerHighlight();
-      }
+      if (DIRTY.players) {
+  DIRTY.players = false;
+
+  updatePlayerStateOverlay();
+
+  if (c.ACTIVE_PLAYER_HIGHLIGHT) updateActivePlayerHighlight();
+  else clearActiveClasses();
+}
 
       const turn = document.querySelector("#ad-ext-turn");
       if (turn && DIRTY.turn) {
@@ -2472,6 +2715,7 @@ function scanWinMusic() {
         if (c.WIN_MUSIC) scanWinMusic();
       }
 
+
       if (clockEl) {
         applyClockStyle();
         applyClockScale();
@@ -2483,13 +2727,16 @@ function scanWinMusic() {
 
   /* ================== ACTIVE POLL TIMER ================== */
   let activePollTimer = null;
-  function configureActivePolling() {
-    if (activePollTimer) { clearInterval(activePollTimer); activePollTimer = null; }
-    const c = cfg();
-    if (c.ACTIVE_PLAYER_HIGHLIGHT && (c.ACTIVE_POLL_MS | 0) > 0) {
-      activePollTimer = setInterval(updateActivePlayerHighlight, c.ACTIVE_POLL_MS | 0);
-    }
+function configureActivePolling() {
+  if (activePollTimer) { clearInterval(activePollTimer); activePollTimer = null; }
+  const c = cfg();
+  if ((c.ACTIVE_POLL_MS | 0) > 0) {
+    activePollTimer = setInterval(() => {
+      updatePlayerStateOverlay();
+      if (c.ACTIVE_PLAYER_HIGHLIGHT) updateActivePlayerHighlight();
+    }, c.ACTIVE_POLL_MS | 0);
   }
+}
 
   function applyToggleSideEffects() {
     const c = cfg();
@@ -2772,9 +3019,10 @@ function ensureMainButtonPosition() {
       total: ["TOTAL_FONT_PX","TOTAL_COLOR_HEX","TOTAL_OPACITY","TOTAL_BG_HEX","TOTAL_BG_OPACITY"],
       checkout: ["CHECKOUT_FONT_PX","CHECKOUT_COLOR_HEX","CHECKOUT_OPACITY"],
       active: ["ACTIVE_COLOR_HEX","ACTIVE_OUTLINE_PX","ACTIVE_GLOW"],
-      triple: ["TRIPLE_SHIMMER_MS","TRIPLE_SLAM_MS","TRIPLE_RATTLE_MS","TRIPLE_RATTLE_DELAY_MS"],
+      triple: ["TRIPLE_SLAM_MS","TRIPLE_RATTLE_MS","TRIPLE_RATTLE_DELAY_MS"],
       win: ["WIN_VOLUME"],
-      skin: ["SKIN_UI_SCALE","SKIN_SPACING_PLAYER","SKIN_BG_URL","SKIN_BG_OVERLAY_ALPHA","SKIN_PLAYER_BG_HEX","SKIN_PLAYER_BG_OPACITY"],
+      layout: ["SKIN_UI_SCALE","SKIN_SPACING_PLAYER","SKIN_AUTO_DISABLE_ON_MISMATCH"],
+      skin: ["SKIN_BG_URL","SKIN_BG_OVERLAY_ALPHA","SKIN_OVERLAY_HEX","SKIN_PLAYER_BG_HEX","SKIN_PLAYER_BG_OPACITY"],
     };
 
     if (tab === "clock") {
@@ -3234,13 +3482,19 @@ function ensureMainButtonPosition() {
     addModuleRow("general",  () => true, () => {}, true,  false, false);
     addModuleRow("diag",     () => true, () => {}, true,  false, false);
 
-    // NEW: Skin toggle
-    addModuleRow("skin",     () => c.SKIN_CSS, v => {
-      c.SKIN_CSS = v;
-      dirtySkin();
-      scheduleUpdate();
-      showToast(v ? L.toasts.skinOn : L.toasts.skinOff);
-    }, false, true, false);
+addModuleRow("skin", () => c.SKIN_ENABLED, v => {
+  c.SKIN_ENABLED = v;
+  dirtySkin();
+  scheduleUpdate();
+  showToast(v ? L.toasts.skinOn : L.toasts.skinOff);
+}, false, true, false);
+
+addModuleRow("layout", () => c.LAYOUT_ENABLED, v => {
+  c.LAYOUT_ENABLED = v;
+  dirtySkin();
+  scheduleUpdate();
+  showToast(v ? L.toasts.layoutOn : L.toasts.layoutOff);
+}, false, true, false);
 
     addModuleRow("board",    () => c.BOARD_MARKER, v => { c.BOARD_MARKER = v; dirtyBoard(); scheduleUpdate(); }, false, false, false);
     addModuleRow("bmback",   () => c.BM_BACK_BUTTON, v => { c.BM_BACK_BUTTON = v; dirtyBm(); scheduleUpdate(); }, false, false, false);
@@ -3365,7 +3619,7 @@ function ensureMainButtonPosition() {
     hTitle.style.fontWeight = "900";
     hTitle.style.fontSize = compact ? "12px" : "13px";
 
-    const canResetTab = ["skin","throws","orig","total","checkout","active","triple","win","clock"].includes(state.ui.selectedTab);
+    const canResetTab = ["skin","layout","throws","orig","total","checkout","active","triple","win","clock"].includes(state.ui.selectedTab);
     const resetBtn = mkButton(L.reset, () => resetTab(state.ui.selectedTab), "ghost", compact);
     resetBtn.style.opacity = canResetTab ? "1" : "0.45";
     resetBtn.style.pointerEvents = canResetTab ? "auto" : "none";
@@ -3590,7 +3844,7 @@ function ensureMainButtonPosition() {
       box.appendChild(title);
 
       const info = {
-      schemaVersion: state.schemaVersion ?? null,  
+      schemaVersion: state.schemaVersion ?? null,
       scriptVersion: SCRIPT_VERSION,
       storeKey: STORE_KEY_STATE,
       preset: presetLabel(state.activePreset),
@@ -3599,7 +3853,8 @@ function ensureMainButtonPosition() {
       safeMode: !!state.ui.safeMode,
       compact: !!state.ui.compact,
         modules: {
-        SKIN_CSS: !!c.SKIN_CSS,
+        SKIN_ENABLED: !!c.SKIN_ENABLED,
+        LAYOUT_ENABLED: !!c.LAYOUT_ENABLED,
         BOARD_MARKER: !!c.BOARD_MARKER,
         BM_BACK_BUTTON: !!c.BM_BACK_BUTTON,
         THROWS_TO_POINTS: !!c.THROWS_TO_POINTS,
@@ -3710,47 +3965,11 @@ function ensureMainButtonPosition() {
         info.textContent = L.skinInfo;
         box.appendChild(info);
 
-        addCheckbox(
-          L.skinText.autoDisable,
-          () => !!c.SKIN_AUTO_DISABLE_ON_MISMATCH,
-          (v) => { c.SKIN_AUTO_DISABLE_ON_MISMATCH = v; }
-        );
-
-        // UI scale
-        const scale = document.createElement("input");
-        scale.type = "range";
-        scale.min = "0.85";
-        scale.max = "1.15";
-        scale.step = "0.01";
-        scale.value = String(clamp(Number(c.SKIN_UI_SCALE ?? 1), 0.85, 1.15));
-        const s0 = Number(scale.value);
-        const sRow = mkSliderRow(L.skinText.uiScale, scale, `${Math.round(s0*100)}%`, "ok", compact);
-        box.appendChild(sRow.row);
-        scale.addEventListener("input", () => {
-          c.SKIN_UI_SCALE = clamp(Number(scale.value) || 1, 0.85, 1.15);
-          sRow.setPill(`${Math.round(c.SKIN_UI_SCALE*100)}%`, "ok");
-          saveStateDebounced();
-          dirtySkin(); scheduleUpdate();
-        });
-        scale.addEventListener("change", () => showToast(L.saved));
-
-        // spacing
-        const sp = document.createElement("input");
-        sp.type = "range";
-        sp.min = "0";
-        sp.max = "80";
-        sp.step = "1";
-        sp.value = String(clamp(Number(c.SKIN_SPACING_PLAYER ?? 20), 0, 80));
-        const sp0 = Number(sp.value);
-        const spRow = mkSliderRow(L.skinText.spacing, sp, `${sp0}px`, "ok", compact);
-        box.appendChild(spRow.row);
-        sp.addEventListener("input", () => {
-          c.SKIN_SPACING_PLAYER = clamp(Number(sp.value) || 0, 0, 80);
-          spRow.setPill(`${c.SKIN_SPACING_PLAYER}px`, "ok");
-          saveStateDebounced();
-          dirtySkin(); scheduleUpdate();
-        });
-        sp.addEventListener("change", () => showToast(L.saved));
+        addColor(
+  () => c.SKIN_OVERLAY_HEX,
+  v => { c.SKIN_OVERLAY_HEX = v; dirtySkin(); scheduleUpdate(); },
+  L.skinText.overlayColor
+);
 
         // overlay alpha
         const ov = document.createElement("input");
@@ -3836,6 +4055,57 @@ function ensureMainButtonPosition() {
         break;
       }
 
+      case "layout": {
+  const info = document.createElement("div");
+  info.style.opacity = "0.85";
+  info.style.fontSize = "12px";
+  info.style.lineHeight = "1.4";
+  info.textContent = "Layout: a player panelek és a nagy, kétoldalas elrendezés. Kikapcsolva az alap Autodarts elrendezés marad.";
+  box.appendChild(info);
+
+  addCheckbox(
+    L.skinText.autoDisable,
+    () => !!c.SKIN_AUTO_DISABLE_ON_MISMATCH,
+    (v) => { c.SKIN_AUTO_DISABLE_ON_MISMATCH = v; }
+  );
+
+  const scale = document.createElement("input");
+  scale.type = "range";
+  scale.min = "0.85";
+  scale.max = "1.15";
+  scale.step = "0.01";
+  scale.value = String(clamp(Number(c.SKIN_UI_SCALE ?? 1), 0.85, 1.15));
+  const s0 = Number(scale.value);
+  const sRow = mkSliderRow(L.skinText.uiScale, scale, `${Math.round(s0*100)}%`, "ok", compact);
+  box.appendChild(sRow.row);
+  scale.addEventListener("input", () => {
+    c.SKIN_UI_SCALE = clamp(Number(scale.value) || 1, 0.85, 1.15);
+    sRow.setPill(`${Math.round(c.SKIN_UI_SCALE*100)}%`, "ok");
+    saveStateDebounced();
+    dirtySkin(); scheduleUpdate();
+  });
+  scale.addEventListener("change", () => showToast(L.saved));
+
+  const sp = document.createElement("input");
+  sp.type = "range";
+  sp.min = "0";
+  sp.max = "80";
+  sp.step = "1";
+  sp.value = String(clamp(Number(c.SKIN_SPACING_PLAYER ?? 20), 0, 80));
+  const sp0 = Number(sp.value);
+  const spRow = mkSliderRow(L.skinText.spacing, sp, `${sp0}px`, "ok", compact);
+  box.appendChild(spRow.row);
+  sp.addEventListener("input", () => {
+    c.SKIN_SPACING_PLAYER = clamp(Number(sp.value) || 0, 0, 80);
+    spRow.setPill(`${c.SKIN_SPACING_PLAYER}px`, "ok");
+    saveStateDebounced();
+    dirtySkin(); scheduleUpdate();
+  });
+  sp.addEventListener("change", () => showToast(L.saved));
+
+  break;
+}
+
       case "board": {
         const info = document.createElement("div");
         info.style.opacity = "0.85";
@@ -3904,7 +4174,6 @@ function ensureMainButtonPosition() {
         break;
 
       case "triple":
-        addSliderMs("TRIPLE_SHIMMER_MS", L.fields.highlightSpeed, 400, 6000, 50);
         addSliderMs("TRIPLE_SLAM_MS", L.fields.numberAnim, 80, 1200, 10);
         addSliderMs("TRIPLE_RATTLE_MS", L.fields.rattleDur, 80, 2000, 20);
         addSliderMs("TRIPLE_RATTLE_DELAY_MS", L.fields.rattleDelay, 0, 2500, 25);
@@ -4097,7 +4366,7 @@ function ensureMainButtonPosition() {
       // reset main scope (listeners/timers) if start() is ever called again
     if (scopeMain) scopeMain.abort();
     scopeMain = makeScope();
-    
+
     initStickyThrowSelectOnce();
     ensureHead(() => {
       ensureUIStyle();
