@@ -113,4 +113,4 @@ A beállítások, képek, fontok, panelpozíció és órapozíció az adott bön
 
 
 ## Licenc
-Ajánlott egy `LICENSE` fájl hozzáadása.
+[LICENSE](LICENSE)
