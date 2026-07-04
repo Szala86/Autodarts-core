@@ -1,11 +1,11 @@
 <!-- README.hu.md (Magyar) -->
 
-# Autodarts – CORE (Userscript)
+# <img width="32" height="32" alt="kép" src="https://github.com/user-attachments/assets/a6c98486-f338-4687-a30e-1eba94a75082" /> Autodarts – CORE (Userscript)
 
 **Nyelvek:** [English](README.md) · [Magyar](README.hu.md) · [Deutsch](README.de.md)
 
 Az **Autodarts CORE** egy böngészőben futó userscript a 
-<img width="32" height="32" alt="kép" src="https://github.com/user-attachments/assets/a6c98486-f338-4687-a30e-1eba94a75082" /> [play.autodarts.io](https://play.autodarts.io/) felületéhez. A célja egy
+[play.autodarts.io](https://play.autodarts.io/) felületéhez. A célja egy
 jobban alakítható, két játékosra optimalizált játéknézet, érintőképernyőn is
 használható dobásjavítás, valamint egyedi tábla- és kártyamegjelenés.
 
