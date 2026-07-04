@@ -4,112 +4,96 @@
 
 **Nyelvek:** [English](README.md) · [Magyar](README.hu.md) · [Deutsch](README.de.md)
 
-> ⚠️ Jogi/egyéb: Ez egy közösségi fejlesztés, **nem hivatalos Autodarts kiegészítő**.
-# Autodarts CORE
+Az **Autodarts CORE** egy böngészőben futó userscript a
+[play.autodarts.io](https://play.autodarts.io/) felületéhez. A célja egy
+jobban alakítható, két játékosra optimalizált játéknézet, érintőképernyőn is
+használható dobásjavítás, valamint egyedi tábla- és kártyamegjelenés.
 
-**Céloldal:** `https://play.autodarts.io/*`  
-**Típus:** Violentmonkey / Tampermonkey userscript Autodartshoz
-
-## Mire való?
-
-Az **Autodarts CORE** az Autodarts mérkőzésnézetét alakítja át és bővíti. Saját, böngészőben mentett beállításokkal lehet személyre szabni a játékoskártyákat, dobáskártyákat, hátteret, darts táblát, falvédőt, dobástörténetet és extra vizuális funkciókat.
-
-> A script az Autodarts aktuális felületére épül. Nagyobb Autodarts-frissítés után előfordulhat, hogy valamelyik elrendezési elem frissítésre szorul.
-
-## Telepítés
-
-1. Telepítsd a **Violentmonkey** vagy **Tampermonkey** bővítményt.
-2. Hozz létre egy új userscriptet.
-3. Illeszd be a teljes CORE scriptet, majd mentsd el.
-4. Nyisd meg az Autodartsot, és indíts vagy nyiss meg egy mérkőzést.
-5. A lebegő fogaskerék gombbal, vagy a **Shift + F** billentyűvel nyitható meg a CORE panel.
+> Nem hivatalos Autodarts-kiegészítő. Az Autodarts felületének frissítései
+> időnként userscript-frissítést tehetnek szükségessé.
 
 ## Fő funkciók
 
-### Játéknézet és kinézet
+### Játéknézet
 
-- kétoldalas CORE nézet vagy az eredeti Autodarts nézet;
-- helyi háttérkép feltöltése (`JPG`, `PNG`, `WebP`);
-- állítható háttér-overlay szín és áttetszőség;
-- kompakt kezelőpanel;
-- magyar, angol és német nyelvű panel.
+- Választható kétoldalas CORE és eredeti Autodarts elrendezés.
+- A dobáskártyák automatikus középre igazítása a két játékoskártya között.
+- Helyi háttérkép feltöltése, színes overlay és áttetszőség.
 
 ### Játékoskártyák
 
-- játékosnév és átlag sor ki- vagy bekapcsolása;
-- név és átlag a pontszám fölött vagy alatt;
-- állítható pontszám-, név- és átlagméret;
-- külön játékoskártya-háttér és áttetszőség;
-- saját betűtípus feltöltése;
-- aktív játékos szín-, keret- és fényléskiemelése;
-- saját, görgethető teljes dobástörténet automatikus ugrással a legújabb dobáshoz.
+- Saját háttérszín és áttetszőség.
+- Feltölthető egyedi betűtípus.
+- Pontszám, név és átlag megjelenítése, méretezése és elrendezése.
+- Saját, görgethető dobástörténet.
+- Aktív játékos színe, kerete és glow-ja.
+- Beállítható győzelmi hang.
 
-### Dobáskártyák
+### Dobás- és összkártyák
 
-- dobások megjelenítése pontértékként, például `T20 → 60`;
-- eredeti jelölés megjelenítése a sarokban, például `T20`;
-- állítható betűméret, szín, áttetszőség és kártyaháttér;
-- külön hover/kijelölési szín;
-- külön összérték-kártya beállítások;
-- külön Checkout és Tipp szín-, betű- és háttérbeállítások;
-- külön font tölthető fel a játékoskártyákhoz, dobáskártyákhoz és összérték-kártyához.
+- A dobásérték, sarokjelölés, összérték, Tipp és Checkout külön állítható.
+- Saját színek, áttetszőség, háttér és hover állapot.
+- Külön feltölthető betűtípus a dobáskártyákhoz és az összkártyához.
+- Tripla találat animációja.
 
-### Dobásjavítás
+### Érintéses dobásjavítás
 
-A dobáskártyákra kattintva saját javítófelület használható. Választható módok:
+A dobáskártyára koppintva két javítófelület közül lehet választani:
 
-- **Kikapcsolva** – nincs CORE javító;
-- **Kompakt** – gyors gombos javítás;
-- **Kör alakú** – szorzóválasztás, majd görgős számtárcsa.
+- **Kör javító:** szorzóválasztó és végtelenül görgethető számkerék.
+- **Kompakt javító:** a javítandó érték körüli legvalószínűbb dobások nagy,
+  érintésbarát gombokon.
+- A funkció teljesen kikapcsolható.
 
-A javítás az Autodarts natív javítási folyamatán keresztül kerül alkalmazásra. A nyitott javítás `Esc` billentyűvel megszakítható.
+### Egyedi tábla
 
-### Egyedi darts tábla és falvédő
+- Helyi JPG, PNG vagy WebP táblakép feltöltése.
+- Külön falvédő/surround kép feltöltése; átlátszó PNG ajánlott.
+- A tábla, a falvédő és a teljes csoport külön méretezhető és pozicionálható.
+- A táblakép forgatható, a natív dobásréteg áttetszősége állítható.
+- A gyári állapotjelző glow automatikusan a táblához vagy a falvédőhöz igazodik.
 
-- saját tábla- és falvédőkép feltöltése (`PNG`, `JPG`, `WebP`);
-- méret, eltolás és a táblakép forgatása;
-- natív tábla áttetszőség és méretezés;
-- átlátszó PNG falvédő és tábla használata ajánlott.
+### Beállítások
 
-### Extrák
+- Három külön profil: Preset A, B és C.
+- Magyar, angol és német kezelőfelület.
+- Beállítások exportálása és importálása.
+- Safe Mode és kompakt panel.
+- Mozgatható, formázható óra widget.
+- Főkapcsoló az egész Autodarts CORE ki- és bekapcsolásához.
 
-- tripla találat animáció kiemelt találatokra;
-- győzelmi hang és hangerő;
-- áthelyezhető, méretezhető óra widget;
-- Safe Mode a túl nagy, a kijelzőn már nem biztonságos méretek korlátozására;
-- export/import JSON-ba a beállítások átviteléhez;
-- diagnosztikai és szelektor-ellenőrző eszközök.
+## Telepítés
 
-## Presetek és mentés
+1. Telepíts egy userscript-kezelőt, például
+   [Violentmonkeyt](https://violentmonkey.github.io/) vagy Tampermonkeyt.
+2. Hozz létre egy új userscriptet.
+3. A létrehozott script teljes tartalmát cseréld le az
+   [`Autodarts_CORE_v1080.user.js`](src/Autodarts_CORE_v1080.user.js) fájl
+   tartalmára.
+4. Mentsd el, majd frissítsd a `play.autodarts.io` oldalt.
+5. Ügyelj rá, hogy egyszerre csak egy Autodarts CORE-verzió legyen engedélyezve.
 
-Három külön beállításprofil használható:
+## Használat
 
-- **Preset A** – `Shift + 1`
-- **Preset B** – `Shift + 2`
-- **Preset C** – `Shift + 3`
+- A lebegő fogaskerék gombbal vagy `Shift+F`-fel nyitható meg a panel.
+- `Shift+1`, `Shift+2`, `Shift+3`: Preset A, B, C.
+- `Shift+M`: Safe Mode.
+- `Shift+H`: súgó.
+- `Esc`: panel vagy megnyitott javító bezárása.
 
-A beállítások, képek, fontok, panelpozíció és órapozíció az adott böngésző `localStorage` tárhelyében mentődnek. Másik böngészőbe vagy gépre az **Export / Import** funkcióval vihetők át.
+A képek, betűtípusok és beállítások helyben, az adott böngészőben tárolódnak.
+A script nem igényel külső háttérkép-URL-t.
 
-## Gyorsbillentyűk
+## Hibaelhárítás
 
-| Billentyű | Funkció |
-|---|---|
-| `Shift + F` | CORE panel megnyitása / bezárása |
-| `Shift + 1 / 2 / 3` | Preset A / B / C |
-| `Shift + M` | Safe Mode ki / be |
-| `Shift + H` | Súgó ki / be |
-| `Shift + T` | Óra ki / be |
-| `Shift + R` | Óra pozíció és stílus reset |
-| `Esc` | Panel bezárása vagy javítás megszakítása |
-| `Ctrl + ↑ / ↓` | Óra méretének változtatása |
-
-## Rövid hibaelhárítás
-
-- **Elcsúszott a felület:** próbáld az eredeti Autodarts nézetet, majd töltsd újra az oldalt.
-- **Autodarts-frissítés után hiba van:** a Skin vagy Layout szelektorai módosításra szorulhatnak.
-- **Stylebotot használsz:** kapcsold ki az Autodarts oldalán, mert ütközhet a CORE saját CSS-ével.
-- **Eltűnt a panel vagy a fogaskerék:** a panelben használd a panel- és főgombpozíció visszaállítását.
-- **Teljes kikapcsolás:** a CORE főkapcsolója oldal-újratöltéssel lép életbe; kikapcsolt állapotban egy `CORE OFF` gombbal kapcsolható vissza.
+- Ha az oldal lassú vagy nem tölt be, először ellenőrizd, hogy nincs-e több
+  CORE-verzió egyszerre bekapcsolva.
+- Kapcsold ki az ugyanazt a felületet módosító Stylebot-szabályokat.
+- Frissítsd teljesen az oldalt a userscript cseréje után.
+- Hibajelentésnél add meg a script verzióját, a böngészőt, a képernyőképet és
+  a hiba pontos lépéseit.
+- A betöltött verzió a böngésző konzoljában a
+  `window.__AD_CORE_VERSION__` értékével ellenőrizhető.
 
 
 ## Licenc
