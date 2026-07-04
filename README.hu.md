@@ -52,8 +52,8 @@ A dobáskártyára koppintva két javítófelület közül lehet választani:
 - A tábla, a falvédő és a teljes csoport külön méretezhető és pozicionálható.
 - A táblakép forgatható, a natív dobásréteg áttetszősége állítható.
 - A gyári állapotjelző glow automatikusan a táblához vagy a falvédőhöz igazodik.
-- [Táblák](https://drive.google.com/drive/folders/14iR8HNAHIoRSRlUB0cD9rP_PKJNpxhSW?usp=sharing)
-- [Falvédők]((https://drive.google.com/drive/folders/1a16N_9Fd1xBnkfUEDZk689ppcSOvhHkY?usp=sharing))
+- [Letölthető táblák](https://drive.google.com/drive/folders/14iR8HNAHIoRSRlUB0cD9rP_PKJNpxhSW?usp=sharing)
+- [Letölthető falvédők](https://drive.google.com/drive/folders/1a16N_9Fd1xBnkfUEDZk689ppcSOvhHkY?usp=sharing)
 
 ### Beállítások
 
