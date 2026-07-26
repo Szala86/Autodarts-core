@@ -1,14 +1,25 @@
-# OS / Editor
+# Local editor and operating-system files
+.vscode/
+.idea/
+*.bak
+*.tmp
+*.log
 .DS_Store
 Thumbs.db
 
-# IDE
-.vscode/
-.idea/
+# Local environment and secrets
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
 
-# Node (ha később használnád)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Local test output
+test-artifacts/
+__pycache__/
+*.pyc
+*.pyo
+# Local Codex browser test profiles
+.codex-core-live-test-profile/
+.codex-edge-test-profile/
