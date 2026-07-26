@@ -1,14 +1,40 @@
-# OS / Editor
-.DS_Store
-Thumbs.db
-
-# IDE
+# Lokális Codex és szerkesztői fájlok
+.codex/local/
 .vscode/
 .idea/
+*.bak
+*.tmp
+*.log
 
-# Node (ha később használnád)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Ne mentsünk feltöltött háttérképből exportált ideiglenes fájlokat
+/tmp/
+# Codex local test profiles
+.codex-core-live-test-profile/
+.codex-edge-test-profile/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Local test output
+test-artifacts/
+# Local Codex/browser test profiles
+.codex-core-live-test-profile/
+.codex-edge-test-profile/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Local test results
+test-artifacts/
+
+# Environment and secret files
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
