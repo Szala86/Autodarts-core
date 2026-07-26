@@ -1,8 +1,8 @@
-# Autodarts CORE
+﻿# Autodarts CORE
 
-**Sprachen:** [English](README.md) Â· [Magyar](README.hu.md) Â· [Deutsch](README.de.md)
+**Sprachen:** [English](README.md) | [Magyar](README.hu.md) | [Deutsch](README.de.md)
 
-Autodarts CORE ist ein inoffizielles Userscript fĂĽr
+Autodarts CORE ist ein inoffizielles Userscript für
 [play.autodarts.io](https://play.autodarts.io/). Es bietet ein konfigurierbares
 Match-Layout, touchfreundliche Wurfkorrektur, benutzerdefinierte Board-Darstellung,
 Spielerkarten, Profile und visuelle Effekte.
@@ -21,30 +21,30 @@ Spielerkarten, Profile und visuelle Effekte.
 - Touchfreundliche Ring- und Kompakt-Korrektur
 - Eigene Hintergrund-, Dartboard- und Surround-Bilder
 - Name, Average, Score, Wurfverlauf, aktiver Spieler, Sieg- und BUST-Status
-- Presets A/B/C, Safe Mode, Import/Export und HU/EN/DE-OberflĂ¤che
-- Uhr, Triple-Animation, Sieges-Effekte und Tools-for-Autodarts-KompatibilitĂ¤t
+- Presets A/B/C, Safe Mode, Import/Export und HU/EN/DE-Oberfläche
+- Uhr, Triple-Animation, Sieges-Effekte und Tools-for-Autodarts-Kompatibilität
 
 ## Installation
 
 1. Einen Userscript-Manager wie
    [Violentmonkey](https://violentmonkey.github.io/) oder Tampermonkey installieren.
-2. Das RAW-Userscript Ă¶ffnen:
+2. Das RAW-Userscript öffnen:
    `https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js`
-3. Installation bestĂ¤tigen.
+3. Installation bestätigen.
 4. Nur eine Autodarts-CORE-Version gleichzeitig aktivieren.
-5. Stylebot-Regeln deaktivieren, die dieselbe Autodarts-OberflĂ¤che verĂ¤ndern.
+5. Stylebot-Regeln deaktivieren, die dieselbe Autodarts-Oberfläche verändern.
 
 ## Aktualisierung
 
-Die Update-Funktion des Userscript-Managers verwenden. Die Release-Datei enthĂ¤lt
-explizite `@downloadURL`- und `@updateURL`-EintrĂ¤ge fĂĽr den `main`-Branch.
+Die Update-Funktion des Userscript-Managers verwenden. Die Release-Datei enthält
+explizite `@downloadURL`- und `@updateURL`-Einträge für den `main`-Branch.
 
 ## Fehlerbehebung
 
-- `play.autodarts.io` nach einem Update vollstĂ¤ndig neu laden.
-- Ă„ltere CORE-Versionen und ĂĽberlappende Stylebot-Regeln deaktivieren.
-- Die geladene Version ist in der Browser-Konsole ĂĽber
-  `window.__AD_CORE_VERSION__` prĂĽfbar.
+- `play.autodarts.io` nach einem Update vollständig neu laden.
+- Ältere CORE-Versionen und überlappende Stylebot-Regeln deaktivieren.
+- Die geladene Version ist in der Browser-Konsole über
+  `window.__AD_CORE_VERSION__` prüfbar.
 
 ## Lizenz
 

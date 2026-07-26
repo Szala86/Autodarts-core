@@ -1,6 +1,6 @@
-# Autodarts CORE
+﻿# Autodarts CORE
 
-**Languages:** [English](README.md) Â· [Magyar](README.hu.md) Â· [Deutsch](README.de.md)
+**Languages:** [English](README.md) | [Magyar](README.hu.md) | [Deutsch](README.de.md)
 
 Autodarts CORE is an unofficial userscript for
 [play.autodarts.io](https://play.autodarts.io/) that provides a configurable

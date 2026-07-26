@@ -1,51 +1,51 @@
-# Autodarts CORE
+﻿# Autodarts CORE
 
-**Nyelvek:** [English](README.md) Â· [Magyar](README.hu.md) Â· [Deutsch](README.de.md)
+**Nyelvek:** [English](README.md) | [Magyar](README.hu.md) | [Deutsch](README.de.md)
 
-Az Autodarts CORE egy nem hivatalos, bĂ¶ngĂ©szĹ‘ben futĂł userscript a
-[play.autodarts.io](https://play.autodarts.io/) felĂĽletĂ©hez. TestreszabhatĂł
-jĂˇtĂ©knĂ©zetet, Ă©rintĂ©sbarĂˇt dobĂˇsjavĂ­tĂˇst, egyedi tĂˇblamegjelenĂ©st,
-jĂˇtĂ©koskĂˇrtya-beĂˇllĂ­tĂˇsokat, profilokat Ă©s vizuĂˇlis effekteket ad.
+Az Autodarts CORE egy nem hivatalos, böngészőben futó userscript a
+[play.autodarts.io](https://play.autodarts.io/) felületéhez. Testreszabható
+játéknézetet, érintésbarát dobásjavítást, egyedi táblamegjelenést,
+játékoskártya-beállításokat, profilokat és vizuális effekteket ad.
 
-> KĂ¶zĂ¶ssĂ©gi projekt, amely nem Ăˇll kapcsolatban az Autodarts fejlesztĹ‘ivel.
+> Közösségi projekt, amely nem áll kapcsolatban az Autodarts fejlesztőivel.
 
-## AktuĂˇlis kiadĂˇs
+## Aktuális kiadás
 
-- VerziĂł: `2.6.112-v1148-dart-toggle-view-reset`
-- KiadĂˇsi fĂˇjl: [`autodarts-core.user.js`](autodarts-core.user.js)
+- Verzió: `2.6.112-v1148-dart-toggle-view-reset`
+- Kiadási fájl: [`autodarts-core.user.js`](autodarts-core.user.js)
 
-## FĹ‘ funkciĂłk
+## Fő funkciók
 
-- KĂ©toldalas CORE Ă©s eredeti Autodarts elrendezĂ©s
-- ReszponzĂ­v jĂˇtĂ©kos-, dobĂˇs-, Ă¶ssz-, Tipp- Ă©s Checkout-kĂˇrtyĂˇk
-- Ă‰rintĂ©sbarĂˇt kĂ¶r Ă©s kompakt dobĂˇsjavĂ­tĂł
-- Egyedi hĂˇttĂ©r-, darts tĂˇbla- Ă©s falvĂ©dĹ‘kĂ©p
-- NĂ©v, Ăˇtlag, pontszĂˇm, dobĂˇstĂ¶rtĂ©net, aktĂ­v jĂˇtĂ©kos, gyĹ‘ztes Ă©s BUST Ăˇllapot
-- Preset A/B/C, Safe Mode, import/export, magyar/angol/nĂ©met felĂĽlet
-- Ă“ra, tripla animĂˇciĂł, gyĹ‘zelmi effektek Ă©s Tools for Autodarts kompatibilitĂˇs
+- Kétoldalas CORE és eredeti Autodarts elrendezés
+- Reszponzív játékos-, dobás-, össz-, Tipp- és Checkout-kártyák
+- Érintésbarát kör és kompakt dobásjavító
+- Egyedi háttér-, darts tábla- és falvédőkép
+- Név, átlag, pontszám, dobástörténet, aktív játékos, győztes és BUST állapot
+- Preset A/B/C, Safe Mode, import/export, magyar/angol/német felület
+- Óra, tripla animáció, győzelmi effektek és Tools for Autodarts kompatibilitás
 
-## TelepĂ­tĂ©s
+## Telepítés
 
-1. TelepĂ­ts userscript-kezelĹ‘t, pĂ©ldĂˇul
+1. Telepíts userscript-kezelőt, például
    [Violentmonkeyt](https://violentmonkey.github.io/) vagy Tampermonkeyt.
 2. Nyisd meg a RAW userscriptet:
    `https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js`
-3. EngedĂ©lyezd a telepĂ­tĂ©st.
-4. Egyszerre csak egy Autodarts CORE-verziĂł legyen bekapcsolva.
-5. Kapcsold ki az ugyanazt a felĂĽletet mĂłdosĂ­tĂł Stylebot-szabĂˇlyokat.
+3. Engedélyezd a telepítést.
+4. Egyszerre csak egy Autodarts CORE-verzió legyen bekapcsolva.
+5. Kapcsold ki az ugyanazt a felületet módosító Stylebot-szabályokat.
 
-## FrissĂ­tĂ©s
+## Frissítés
 
-HasznĂˇld a userscript-kezelĹ‘ frissĂ­tĂ©si funkciĂłjĂˇt. A kiadĂˇsi fĂˇjl explicit
-`@downloadURL` Ă©s `@updateURL` bejegyzĂ©sekkel a `main` Ăˇgra mutat.
+Használd a userscript-kezelő frissítési funkcióját. A kiadási fájl explicit
+`@downloadURL` és `@updateURL` bejegyzésekkel a `main` ágra mutat.
 
-## HibaelhĂˇrĂ­tĂˇs
+## Hibaelhárítás
 
-- FrissĂ­tĂ©s utĂˇn tĂ¶ltsd Ăşjra teljesen a `play.autodarts.io` oldalt.
-- Kapcsold ki a rĂ©gebbi CORE-verziĂłkat Ă©s az ĂˇtfedĹ‘ Stylebot-szabĂˇlyokat.
-- A betĂ¶ltĂ¶tt verziĂł a bĂ¶ngĂ©szĹ‘ konzoljĂˇban a
-  `window.__AD_CORE_VERSION__` Ă©rtĂ©kĂ©vel ellenĹ‘rizhetĹ‘.
+- Frissítés után töltsd újra teljesen a `play.autodarts.io` oldalt.
+- Kapcsold ki a régebbi CORE-verziókat és az átfedő Stylebot-szabályokat.
+- A betöltött verzió a böngésző konzoljában a
+  `window.__AD_CORE_VERSION__` értékével ellenőrizhető.
 
 ## Licenc
 
-LĂˇsd: [LICENSE](LICENSE).
+Lásd: [LICENSE](LICENSE).
