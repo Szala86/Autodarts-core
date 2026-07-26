@@ -1,1 +1,0 @@
-Olvasd el először az `AGENTS.md`, a `docs/PROJECT_STATE_HU.md` és a `docs/TEST_CHECKLIST_HU.md` fájlokat. Ezután csak foglald össze röviden, hogy melyik az aktív alapfájl, mely működő részeket tilos regresszálni, és hogyan fogsz új verziót készíteni. Még ne módosíts kódot.

@@ -1,40 +1,25 @@
-# Lokális Codex és szerkesztői fájlok
-.codex/local/
+# Local editor and operating-system files
 .vscode/
 .idea/
 *.bak
 *.tmp
 *.log
+.DS_Store
+Thumbs.db
 
-# Ne mentsünk feltöltött háttérképből exportált ideiglenes fájlokat
-/tmp/
-# Codex local test profiles
-.codex-core-live-test-profile/
-.codex-edge-test-profile/
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# Local test output
-test-artifacts/
-# Local Codex/browser test profiles
-.codex-core-live-test-profile/
-.codex-edge-test-profile/
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# Local test results
-test-artifacts/
-
-# Environment and secret files
+# Local environment and secrets
 .env
 .env.*
 *.pem
 *.key
 credentials.json
 secrets.json
+
+# Local test output
+test-artifacts/
+__pycache__/
+*.pyc
+*.pyo
+# Local Codex browser test profiles
+.codex-core-live-test-profile/
+.codex-edge-test-profile/

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Autodarts – teszt_20260410_v4_v46singlehistory2
+// @name         Autodarts CORE
 // @namespace    autodarts.core.szala
 // @author       Szala/AI
 // @version      2.6.112-v1148-dart-toggle-view-reset
@@ -9,7 +9,9 @@
 // @inject-into  page
 // @homepageURL  https://github.com/Szala86/Autodarts-core
 // @supportURL   https://github.com/Szala86/Autodarts-core/issues
-// @description  Autodarts CORE: testreszabható játéknézet, kártyák, tábla, javítások és effektek.
+// @downloadURL  https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
+// @updateURL    https://raw.githubusercontent.com/Szala86/Autodarts-core/main/autodarts-core.user.js
+// @description  Configurable Autodarts match UI with custom layouts, cards, correction tools, board assets, presets and effects.
 // ==/UserScript==
 
 (() => {
